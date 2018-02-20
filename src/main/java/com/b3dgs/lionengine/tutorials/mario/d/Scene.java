@@ -24,7 +24,7 @@ import com.b3dgs.lionengine.Media;
 import com.b3dgs.lionengine.Resolution;
 import com.b3dgs.lionengine.Verbose;
 import com.b3dgs.lionengine.audio.AudioFactory;
-import com.b3dgs.lionengine.audio.midi.Midi;
+import com.b3dgs.lionengine.audio.adlmidi.AdlMidi;
 import com.b3dgs.lionengine.core.Engine;
 import com.b3dgs.lionengine.core.Medias;
 import com.b3dgs.lionengine.game.feature.SequenceGame;
@@ -65,7 +65,7 @@ class Scene extends SequenceGame
         }
     }
 
-    private final Midi music = AudioFactory.loadAudio(Medias.create("music", "music.mid"), Midi.class);
+    private final AdlMidi music = AudioFactory.loadAudio(Medias.create("music", "music.midi"), AdlMidi.class);
 
     /**
      * Create world.
@@ -88,7 +88,7 @@ class Scene extends SequenceGame
         }
         world.loadFromFile(LEVEL);
         music.setVolume(30);
-        music.play(true);
+        music.play();
     }
 
     @Override

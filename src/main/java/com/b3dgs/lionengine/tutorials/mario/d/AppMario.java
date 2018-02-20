@@ -20,7 +20,7 @@ package com.b3dgs.lionengine.tutorials.mario.d;
 import com.b3dgs.lionengine.Config;
 import com.b3dgs.lionengine.Version;
 import com.b3dgs.lionengine.audio.AudioFactory;
-import com.b3dgs.lionengine.audio.midi.MidiFormat;
+import com.b3dgs.lionengine.audio.adlmidi.AdlMidiFormat;
 import com.b3dgs.lionengine.audio.wav.WavFormat;
 import com.b3dgs.lionengine.core.awt.EngineAwt;
 import com.b3dgs.lionengine.core.sequence.Loader;
@@ -43,7 +43,8 @@ public class AppMario
     public static void main(String[] args)
     {
         EngineAwt.start(NAME, VERSION, AppMario.class);
-        AudioFactory.addFormat(new WavFormat(), new MidiFormat());
+        AudioFactory.addFormat(new WavFormat());
+        AudioFactory.addFormat(new AdlMidiFormat());
         Loader.start(Config.windowed(Scene.NATIVE.get2x()), Scene.class);
     }
 }
