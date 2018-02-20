@@ -18,7 +18,7 @@
 package com.b3dgs.lionengine.tutorials.mario.d;
 
 import com.b3dgs.lionengine.Mirror;
-import com.b3dgs.lionengine.game.Direction;
+import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.StateFactory;
 import com.b3dgs.lionengine.game.feature.Camera;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
@@ -116,7 +116,7 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
     {
         mirrorable.mirror(Mirror.NONE);
         transformable.teleport(x, GROUND);
-        model.getJump().setDirection(Direction.ZERO);
+        model.getJump().setDirection(DirectionNone.INSTANCE);
         body.resetGravity();
         collidable.setEnabled(true);
         tileCollidable.setEnabled(true);

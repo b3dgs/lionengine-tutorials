@@ -20,7 +20,7 @@ package com.b3dgs.lionengine.tutorials.mario.c;
 import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.Mirror;
-import com.b3dgs.lionengine.game.Direction;
+import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.StateTransition;
 import com.b3dgs.lionengine.game.feature.Featurable;
@@ -109,7 +109,7 @@ class StateJump extends StateGame implements StateInputDirectionalUpdater, TileC
     {
         if (Axis.Y == axis)
         {
-            jump.setDirection(Direction.ZERO);
+            jump.setDirection(DirectionNone.INSTANCE);
         }
     }
 

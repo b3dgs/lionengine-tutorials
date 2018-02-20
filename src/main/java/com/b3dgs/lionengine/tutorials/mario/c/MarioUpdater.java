@@ -17,7 +17,7 @@
  */
 package com.b3dgs.lionengine.tutorials.mario.c;
 
-import com.b3dgs.lionengine.game.Direction;
+import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.StateFactory;
 import com.b3dgs.lionengine.game.feature.Camera;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
@@ -91,7 +91,7 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
     {
         transformable.teleport(400, GROUND);
         camera.resetInterval(transformable);
-        model.getJump().setDirection(Direction.ZERO);
+        model.getJump().setDirection(DirectionNone.INSTANCE);
         body.resetGravity();
     }
 
