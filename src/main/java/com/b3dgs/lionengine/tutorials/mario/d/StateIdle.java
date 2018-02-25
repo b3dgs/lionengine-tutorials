@@ -29,14 +29,14 @@ import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
-import com.b3dgs.lionengine.game.state.StateGame;
+import com.b3dgs.lionengine.game.state.StateAbstract;
 import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Idle state implementation.
  */
-class StateIdle extends StateGame implements TileCollidableListener
+class StateIdle extends StateAbstract implements TileCollidableListener
 {
     private final AtomicBoolean canJump = new AtomicBoolean(false);
     private final Transformable transformable;

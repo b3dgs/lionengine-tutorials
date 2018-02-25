@@ -23,12 +23,12 @@ import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.feature.Identifiable;
-import com.b3dgs.lionengine.game.state.StateGame;
+import com.b3dgs.lionengine.game.state.StateAbstract;
 
 /**
  * Goomba die state implementation.
  */
-class StateDieGoomba extends StateGame
+class StateDieGoomba extends StateAbstract
 {
     private final Featurable featurable;
     private final Force movement;

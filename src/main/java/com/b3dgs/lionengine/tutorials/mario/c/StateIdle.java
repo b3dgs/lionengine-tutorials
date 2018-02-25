@@ -22,14 +22,14 @@ import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.StateTransition;
 import com.b3dgs.lionengine.game.feature.Featurable;
-import com.b3dgs.lionengine.game.state.StateGame;
+import com.b3dgs.lionengine.game.state.StateAbstract;
 import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Idle state implementation.
  */
-class StateIdle extends StateGame
+class StateIdle extends StateAbstract
 {
     private final Animator animator;
     private final Animation animation;

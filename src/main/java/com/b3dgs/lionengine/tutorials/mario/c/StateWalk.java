@@ -31,7 +31,7 @@ import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
-import com.b3dgs.lionengine.game.state.StateGame;
+import com.b3dgs.lionengine.game.state.StateAbstract;
 import com.b3dgs.lionengine.game.state.StateInputDirectionalUpdater;
 import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
@@ -39,7 +39,7 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
 /**
  * Walk state implementation.
  */
-class StateWalk extends StateGame implements StateInputDirectionalUpdater, TileCollidableListener
+class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, TileCollidableListener
 {
     /** Horizontal collision. */
     private final AtomicBoolean collide = new AtomicBoolean();

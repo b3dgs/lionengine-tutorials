@@ -33,7 +33,7 @@ import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
-import com.b3dgs.lionengine.game.state.StateGame;
+import com.b3dgs.lionengine.game.state.StateAbstract;
 import com.b3dgs.lionengine.game.state.StateInputDirectionalUpdater;
 import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
@@ -41,7 +41,7 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
 /**
  * Jump state implementation.
  */
-class StateJump extends StateGame implements StateInputDirectionalUpdater, TileCollidableListener
+class StateJump extends StateAbstract implements StateInputDirectionalUpdater, TileCollidableListener
 {
     private final AtomicBoolean ground = new AtomicBoolean();
     private final Transformable transformable;

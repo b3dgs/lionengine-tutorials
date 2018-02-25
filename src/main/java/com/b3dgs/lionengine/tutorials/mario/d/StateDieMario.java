@@ -21,12 +21,12 @@ import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.feature.Featurable;
-import com.b3dgs.lionengine.game.state.StateGame;
+import com.b3dgs.lionengine.game.state.StateAbstract;
 
 /**
  * Mario die state implementation.
  */
-class StateDieMario extends StateGame
+class StateDieMario extends StateAbstract
 {
     private final Force movement;
     private final Force jump;

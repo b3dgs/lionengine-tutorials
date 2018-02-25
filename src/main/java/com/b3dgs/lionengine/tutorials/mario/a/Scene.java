@@ -19,6 +19,7 @@ package com.b3dgs.lionengine.tutorials.mario.a;
 
 import com.b3dgs.lionengine.Context;
 import com.b3dgs.lionengine.Resolution;
+import com.b3dgs.lionengine.core.awt.KeyboardAwt;
 import com.b3dgs.lionengine.core.sequence.Sequence;
 import com.b3dgs.lionengine.graphic.Graphic;
 import com.b3dgs.lionengine.io.awt.Keyboard;
@@ -40,7 +41,7 @@ class Scene extends Sequence
     {
         super(context, NATIVE);
 
-        getInputDevice(Keyboard.class).addActionPressed(Keyboard.ESCAPE, () -> end());
+        getInputDevice(Keyboard.class).addActionPressed(KeyboardAwt.ESCAPE, () -> end());
     }
 
     @Override
