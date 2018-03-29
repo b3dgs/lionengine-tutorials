@@ -29,6 +29,7 @@ import com.b3dgs.lionengine.game.feature.Refreshable;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.StateAnimationBased;
+import com.b3dgs.lionengine.game.feature.StateAnimationUtil;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
@@ -82,7 +83,7 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
     {
         super.prepare(provider);
 
-        StateAnimationBased.Util.loadStates(EntityState.values(), factory, provider, setup);
+        StateAnimationUtil.loadStates(EntityState.values(), factory, provider, setup);
         handler.changeState(EntityState.IDLE);
     }
 

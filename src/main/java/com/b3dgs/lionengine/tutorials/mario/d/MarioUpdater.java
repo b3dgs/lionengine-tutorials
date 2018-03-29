@@ -21,7 +21,7 @@ import com.b3dgs.lionengine.game.feature.FeatureGet;
 import com.b3dgs.lionengine.game.feature.FeatureProvider;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
-import com.b3dgs.lionengine.game.feature.StateAnimationBased;
+import com.b3dgs.lionengine.game.feature.StateAnimationUtil;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
 import com.b3dgs.lionengine.game.feature.collidable.CollidableListener;
@@ -55,7 +55,7 @@ class MarioUpdater extends EntityUpdater implements CollidableListener
     @Override
     public void prepare(FeatureProvider provider)
     {
-        StateAnimationBased.Util.loadStates(MarioState.values(), factory, provider, setup);
+        StateAnimationUtil.loadStates(MarioState.values(), factory, provider, setup);
 
         super.prepare(provider);
 

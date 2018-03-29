@@ -27,7 +27,7 @@ import com.b3dgs.lionengine.game.feature.Mirrorable;
 import com.b3dgs.lionengine.game.feature.Refreshable;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
-import com.b3dgs.lionengine.game.feature.StateAnimationBased;
+import com.b3dgs.lionengine.game.feature.StateAnimationUtil;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
@@ -77,7 +77,7 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
     {
         super.prepare(provider);
 
-        StateAnimationBased.Util.loadStates(MarioState.values(), factory, provider, setup);
+        StateAnimationUtil.loadStates(MarioState.values(), factory, provider, setup);
         handler.changeState(MarioState.IDLE);
         handler.addInput(keyboard);
 

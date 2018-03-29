@@ -21,7 +21,7 @@ import com.b3dgs.lionengine.game.feature.FeatureGet;
 import com.b3dgs.lionengine.game.feature.FeatureProvider;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
-import com.b3dgs.lionengine.game.feature.StateAnimationBased;
+import com.b3dgs.lionengine.game.feature.StateAnimationUtil;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
 import com.b3dgs.lionengine.game.feature.collidable.CollidableListener;
@@ -56,7 +56,7 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
     @Override
     public void prepare(FeatureProvider provider)
     {
-        StateAnimationBased.Util.loadStates(GoombaState.values(), factory, provider, setup);
+        StateAnimationUtil.loadStates(GoombaState.values(), factory, provider, setup);
 
         super.prepare(provider);
         collidable.setGroup(1);
