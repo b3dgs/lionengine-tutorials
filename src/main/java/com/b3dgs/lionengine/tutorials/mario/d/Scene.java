@@ -20,14 +20,15 @@ package com.b3dgs.lionengine.tutorials.mario.d;
 import java.io.IOException;
 
 import com.b3dgs.lionengine.Context;
+import com.b3dgs.lionengine.Engine;
 import com.b3dgs.lionengine.Media;
+import com.b3dgs.lionengine.Medias;
 import com.b3dgs.lionengine.Resolution;
 import com.b3dgs.lionengine.Verbose;
 import com.b3dgs.lionengine.audio.AudioFactory;
 import com.b3dgs.lionengine.audio.adlmidi.AdlMidi;
-import com.b3dgs.lionengine.core.Engine;
-import com.b3dgs.lionengine.core.Medias;
-import com.b3dgs.lionengine.core.awt.KeyboardAwt;
+import com.b3dgs.lionengine.awt.Keyboard;
+import com.b3dgs.lionengine.awt.KeyboardAwt;
 import com.b3dgs.lionengine.game.feature.SequenceGame;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.tile.map.MapTile;
@@ -35,7 +36,6 @@ import com.b3dgs.lionengine.game.feature.tile.map.MapTileGame;
 import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersister;
 import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersisterModel;
 import com.b3dgs.lionengine.io.FileWriting;
-import com.b3dgs.lionengine.io.awt.Keyboard;
 
 /**
  * Game loop designed to handle our little world.

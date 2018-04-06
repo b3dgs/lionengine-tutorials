@@ -24,7 +24,6 @@ import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.Mirror;
 import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.StateTransition;
 import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
 import com.b3dgs.lionengine.game.feature.Transformable;
@@ -35,6 +34,7 @@ import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.game.state.StateAbstract;
 import com.b3dgs.lionengine.game.state.StateInputDirectionalUpdater;
+import com.b3dgs.lionengine.game.state.StateTransition;
 import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 

@@ -19,17 +19,14 @@ package com.b3dgs.lionengine.tutorials.mario.d;
 
 import com.b3dgs.lionengine.Mirror;
 import com.b3dgs.lionengine.game.DirectionNone;
-import com.b3dgs.lionengine.game.StateFactory;
+import com.b3dgs.lionengine.game.FeatureProvider;
 import com.b3dgs.lionengine.game.feature.Camera;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
 import com.b3dgs.lionengine.game.feature.FeatureModel;
-import com.b3dgs.lionengine.game.feature.FeatureProvider;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
 import com.b3dgs.lionengine.game.feature.Refreshable;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
-import com.b3dgs.lionengine.game.feature.StateAnimationBased;
-import com.b3dgs.lionengine.game.feature.StateAnimationUtil;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
@@ -37,8 +34,11 @@ import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
+import com.b3dgs.lionengine.game.state.StateAnimationBased;
+import com.b3dgs.lionengine.game.state.StateAnimationUtil;
+import com.b3dgs.lionengine.game.state.StateFactory;
 import com.b3dgs.lionengine.game.state.StateHandler;
-import com.b3dgs.lionengine.graphic.SpriteAnimated;
+import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**

@@ -19,10 +19,10 @@ package com.b3dgs.lionengine.tutorials.mario.a;
 
 import com.b3dgs.lionengine.Context;
 import com.b3dgs.lionengine.Resolution;
-import com.b3dgs.lionengine.core.awt.KeyboardAwt;
-import com.b3dgs.lionengine.core.sequence.Sequence;
+import com.b3dgs.lionengine.awt.Keyboard;
+import com.b3dgs.lionengine.awt.KeyboardAwt;
 import com.b3dgs.lionengine.graphic.Graphic;
-import com.b3dgs.lionengine.io.awt.Keyboard;
+import com.b3dgs.lionengine.graphic.engine.Sequence;
 
 /**
  * Game loop designed to handle our little world.

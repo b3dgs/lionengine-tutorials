@@ -22,8 +22,8 @@ import com.b3dgs.lionengine.Version;
 import com.b3dgs.lionengine.audio.AudioFactory;
 import com.b3dgs.lionengine.audio.adlmidi.AdlMidiFormat;
 import com.b3dgs.lionengine.audio.wav.WavFormat;
-import com.b3dgs.lionengine.core.awt.EngineAwt;
-import com.b3dgs.lionengine.core.sequence.Loader;
+import com.b3dgs.lionengine.awt.graphic.EngineAwt;
+import com.b3dgs.lionengine.graphic.engine.Loader;
 
 /**
  * Program starts here.

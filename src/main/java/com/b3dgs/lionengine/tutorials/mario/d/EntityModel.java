@@ -19,17 +19,17 @@ package com.b3dgs.lionengine.tutorials.mario.d;
 
 import com.b3dgs.lionengine.Context;
 import com.b3dgs.lionengine.Origin;
-import com.b3dgs.lionengine.core.drawable.Drawable;
+import com.b3dgs.lionengine.game.FeatureProvider;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.FramesConfig;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
 import com.b3dgs.lionengine.game.feature.FeatureModel;
-import com.b3dgs.lionengine.game.feature.FeatureProvider;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
-import com.b3dgs.lionengine.graphic.SpriteAnimated;
+import com.b3dgs.lionengine.graphic.drawable.Drawable;
+import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
 
 /**
  * Entity model implementation.
