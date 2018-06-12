@@ -19,7 +19,6 @@ package com.b3dgs.lionengine.tutorials.mario.c;
 
 import java.io.IOException;
 
-import com.b3dgs.lionengine.Context;
 import com.b3dgs.lionengine.Media;
 import com.b3dgs.lionengine.Medias;
 import com.b3dgs.lionengine.game.feature.CameraTracker;
@@ -57,12 +56,11 @@ class World extends WorldGame
     /**
      * Create world.
      * 
-     * @param context The context reference.
      * @param services The services reference.
      */
-    public World(Context context, Services services)
+    public World(Services services)
     {
-        super(context, services);
+        super(services);
 
         services.add(getInputDevice(InputDeviceDirectional.class));
 

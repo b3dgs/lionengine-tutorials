@@ -17,7 +17,6 @@
  */
 package com.b3dgs.lionengine.tutorials.mario.c;
 
-import com.b3dgs.lionengine.Context;
 import com.b3dgs.lionengine.Origin;
 import com.b3dgs.lionengine.game.FeatureProvider;
 import com.b3dgs.lionengine.game.Force;
@@ -29,6 +28,7 @@ import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.graphic.drawable.Drawable;
 import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
+import com.b3dgs.lionengine.graphic.engine.SourceResolutionProvider;
 
 /**
  * Mario model implementation.
@@ -41,7 +41,7 @@ class MarioModel extends FeatureModel
     private final Force jump = new Force();
     private final SpriteAnimated surface;
 
-    private final Context context;
+    private final SourceResolutionProvider source;
 
     @FeatureGet private Body body;
 
@@ -55,7 +55,7 @@ class MarioModel extends FeatureModel
     {
         super();
 
-        context = services.get(Context.class);
+        source = services.get(SourceResolutionProvider.class);
 
         final FramesConfig frames = FramesConfig.imports(setup);
         surface = Drawable.loadSpriteAnimated(setup.getSurface(), frames.getHorizontal(), frames.getVertical());
@@ -70,7 +70,7 @@ class MarioModel extends FeatureModel
 
         body.setGravity(GRAVITY);
         body.setVectors(movement, jump);
-        body.setDesiredFps(context.getConfig().getSource().getRate());
+        body.setDesiredFps(source.getRate());
     }
 
     /**
