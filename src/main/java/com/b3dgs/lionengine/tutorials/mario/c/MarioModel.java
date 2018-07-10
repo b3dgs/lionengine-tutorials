@@ -29,6 +29,7 @@ import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.graphic.drawable.Drawable;
 import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
 import com.b3dgs.lionengine.graphic.engine.SourceResolutionProvider;
+import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Mario model implementation.
@@ -41,6 +42,7 @@ class MarioModel extends FeatureModel
     private final Force jump = new Force();
     private final SpriteAnimated surface;
 
+    private final InputDeviceDirectional keyboard;
     private final SourceResolutionProvider source;
 
     @FeatureGet private Body body;
@@ -56,6 +58,7 @@ class MarioModel extends FeatureModel
         super();
 
         source = services.get(SourceResolutionProvider.class);
+        keyboard = services.get(InputDeviceDirectional.class);
 
         final FramesConfig frames = FramesConfig.imports(setup);
         surface = Drawable.loadSpriteAnimated(setup.getSurface(), frames.getHorizontal(), frames.getVertical());
@@ -101,5 +104,15 @@ class MarioModel extends FeatureModel
     public SpriteAnimated getSurface()
     {
         return surface;
+    }
+
+    /**
+     * Get input.
+     * 
+     * @return The input.
+     */
+    public InputDeviceDirectional getInput()
+    {
+        return keyboard;
     }
 }

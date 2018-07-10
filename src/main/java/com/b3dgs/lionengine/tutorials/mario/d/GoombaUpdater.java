@@ -35,6 +35,7 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
  */
 class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, CollidableListener
 {
+    @FeatureGet private EntityModel model;
     @FeatureGet private Transformable transformable;
     @FeatureGet private TileCollidable tileCollidable;
     @FeatureGet private Collidable collidable;
@@ -59,9 +60,10 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
         StateAnimationUtil.loadStates(GoombaState.values(), factory, provider, setup);
 
         super.prepare(provider);
+
+        model.setInput(this);
         collidable.setGroup(1);
         collidable.addAccept(0);
-        setControl(this);
     }
 
     @Override

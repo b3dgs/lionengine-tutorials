@@ -32,15 +32,12 @@ import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.game.state.StateAbstract;
-import com.b3dgs.lionengine.game.state.StateInputDirectionalUpdater;
-import com.b3dgs.lionengine.game.state.StateTransition;
-import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
-import com.b3dgs.lionengine.io.InputDeviceDirectional;
+import com.b3dgs.lionengine.game.state.StateChecker;
 
 /**
  * Walk state implementation.
  */
-class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, TileCollidableListener
+class StateWalk extends StateAbstract implements TileCollidableListener
 {
     private final AtomicBoolean horizontalCollide = new AtomicBoolean(false);
     private final AtomicBoolean canJump = new AtomicBoolean(false);
@@ -52,9 +49,8 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
     private final Animation animation;
     private final Transformable transformable;
     private final TileCollidable tileCollidable;
+    private final EntityModel model;
 
-    /** Movement side. */
-    private double side;
     /** Played flag. */
     private boolean played;
 
@@ -73,14 +69,34 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
         tileCollidable = featurable.getFeature(TileCollidable.class);
         transformable = featurable.getFeature(Transformable.class);
 
-        final EntityModel model = featurable.getFeature(EntityModel.class);
+        model = featurable.getFeature(EntityModel.class);
         animator = model.getSurface();
         movement = model.getMovement();
         jump = model.getJump();
 
-        addTransition(new TransitionWalkToIdle());
-        addTransition(new TransitionWalkToTurn());
-        addTransition(new TransitionWalkToJump());
+        addTransition(EntityState.IDLE,
+                      () -> horizontalCollide.get()
+                            || model.getInput().getHorizontalDirection() == 0
+                               && model.getInput().getVerticalDirection() == 0);
+        addTransition(EntityState.TURN,
+                      () -> model.getInput().getHorizontalDirection() < 0 && movement.getDirectionHorizontal() > 0
+                            || model.getInput().getHorizontalDirection() > 0 && movement.getDirectionHorizontal() < 0);
+        addTransition(EntityState.JUMP, new StateChecker()
+        {
+            @Override
+            public boolean check()
+            {
+                return model.getInput().getVerticalDirection() > 0 && canJump.get();
+            }
+
+            @Override
+            public void exit()
+            {
+                Sfx.JUMP.play();
+                jump.setDirection(0.0, 8.0);
+                canJump.set(false);
+            }
+        });
     }
 
     @Override
@@ -89,7 +105,6 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
         movement.setVelocity(0.5);
         movement.setSensibility(0.1);
         tileCollidable.addListener(this);
-        side = 0;
         played = false;
         horizontalCollide.set(false);
     }
@@ -101,12 +116,6 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
     }
 
     @Override
-    public void updateInput(InputDeviceDirectional input)
-    {
-        side = input.getHorizontalDirection();
-    }
-
-    @Override
     public void update(double extrp)
     {
         if (!played && movement.getDirectionHorizontal() != 0)
@@ -114,6 +123,8 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
             animator.play(animation);
             played = true;
         }
+
+        final double side = model.getInput().getHorizontalDirection();
         movement.setDestination(side * 3, 0);
         animator.setAnimSpeed(Math.abs(movement.getDirectionHorizontal()) / 12.0);
 
@@ -138,75 +149,6 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
         else if (Axis.Y == axis && transformable.getY() < transformable.getOldY())
         {
             canJump.set(true);
-        }
-    }
-
-    /**
-     * Transition from {@link StateWalk} to {@link StateIdle}.
-     */
-    private class TransitionWalkToIdle extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionWalkToIdle()
-        {
-            super(EntityState.IDLE);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return horizontalCollide.get() || input.getHorizontalDirection() == 0 && input.getVerticalDirection() == 0;
-        }
-    }
-
-    /**
-     * Transition from {@link StateWalk} to {@link StateTurn}.
-     */
-    private class TransitionWalkToTurn extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionWalkToTurn()
-        {
-            super(EntityState.TURN);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return input.getHorizontalDirection() < 0 && movement.getDirectionHorizontal() > 0
-                   || input.getHorizontalDirection() > 0 && movement.getDirectionHorizontal() < 0;
-        }
-    }
-
-    /**
-     * Transition from {@link StateWalk} to {@link StateJump}.
-     */
-    private class TransitionWalkToJump extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionWalkToJump()
-        {
-            super(EntityState.JUMP);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return input.getVerticalDirection() > 0 && canJump.get();
-        }
-
-        @Override
-        public void exit()
-        {
-            Sfx.JUMP.play();
-            jump.setDirection(0.0, 8.0);
-            canJump.set(false);
         }
     }
 }

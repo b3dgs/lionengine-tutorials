@@ -29,15 +29,12 @@ import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.game.state.StateAbstract;
-import com.b3dgs.lionengine.game.state.StateInputDirectionalUpdater;
-import com.b3dgs.lionengine.game.state.StateTransition;
-import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Jump state implementation.
  */
-class StateJump extends StateAbstract implements StateInputDirectionalUpdater, TileCollidableListener
+class StateJump extends StateAbstract implements TileCollidableListener
 {
     private final Force jump;
     private final Mirrorable mirrorable;
@@ -45,9 +42,7 @@ class StateJump extends StateAbstract implements StateInputDirectionalUpdater, T
     private final Animation animation;
     private final TileCollidable tileCollidable;
     private final Force movement;
-
-    /** Movement side. */
-    private double side;
+    private final InputDeviceDirectional input;
 
     /**
      * Create the state.
@@ -67,8 +62,9 @@ class StateJump extends StateAbstract implements StateInputDirectionalUpdater, T
         animator = model.getSurface();
         movement = model.getMovement();
         jump = model.getJump();
+        input = model.getInput();
 
-        addTransition(new TransitionJumpToIdle());
+        addTransition(MarioState.IDLE, () -> jump.getDirectionVertical() == 0);
     }
 
     @Override
@@ -79,7 +75,6 @@ class StateJump extends StateAbstract implements StateInputDirectionalUpdater, T
         animator.play(animation);
         jump.setDirection(0.0, 8.0);
         tileCollidable.addListener(this);
-        side = 0;
     }
 
     @Override
@@ -89,14 +84,9 @@ class StateJump extends StateAbstract implements StateInputDirectionalUpdater, T
     }
 
     @Override
-    public void updateInput(InputDeviceDirectional input)
-    {
-        side = input.getHorizontalDirection();
-    }
-
-    @Override
     public void update(double extrp)
     {
+        final double side = input.getHorizontalDirection();
         movement.setDestination(side * 3, 0);
         if (movement.getDirectionHorizontal() != 0)
         {
@@ -110,26 +100,6 @@ class StateJump extends StateAbstract implements StateInputDirectionalUpdater, T
         if (Axis.Y == axis)
         {
             jump.setDirection(DirectionNone.INSTANCE);
-        }
-    }
-
-    /**
-     * Transition from {@link StateJump} to {@link StateIdle}.
-     */
-    private class TransitionJumpToIdle extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionJumpToIdle()
-        {
-            super(MarioState.IDLE);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return jump.getDirectionVertical() == 0;
         }
     }
 }

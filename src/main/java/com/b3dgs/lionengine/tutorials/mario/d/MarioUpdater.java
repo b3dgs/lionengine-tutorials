@@ -33,8 +33,9 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
  */
 class MarioUpdater extends EntityUpdater implements CollidableListener
 {
-    private final InputDeviceDirectional keyboard;
+    private final Services services;
 
+    @FeatureGet private EntityModel model;
     @FeatureGet private Transformable transformable;
     @FeatureGet private TileCollidable tileCollidable;
     @FeatureGet private Collidable collidable;
@@ -49,7 +50,7 @@ class MarioUpdater extends EntityUpdater implements CollidableListener
     {
         super(services, setup);
 
-        keyboard = services.get(InputDeviceDirectional.class);
+        this.services = services;
     }
 
     @Override
@@ -59,9 +60,10 @@ class MarioUpdater extends EntityUpdater implements CollidableListener
 
         super.prepare(provider);
 
+        model.setInput(services.get(InputDeviceDirectional.class));
+
         collidable.setGroup(0);
         collidable.addAccept(1);
-        setControl(keyboard);
         respawn(160);
     }
 

@@ -39,7 +39,6 @@ import com.b3dgs.lionengine.game.state.StateAnimationUtil;
 import com.b3dgs.lionengine.game.state.StateFactory;
 import com.b3dgs.lionengine.game.state.StateHandler;
 import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
-import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Entity updating implementation.
@@ -132,16 +131,6 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
     public void changeState(Enum<?> next)
     {
         handler.changeState(next);
-    }
-
-    /**
-     * Set the device that will control the entity.
-     * 
-     * @param device The device controller.
-     */
-    public void setControl(InputDeviceDirectional device)
-    {
-        handler.addInput(device);
     }
 
     @Override

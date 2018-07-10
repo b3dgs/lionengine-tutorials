@@ -33,15 +33,11 @@ import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.game.state.StateAbstract;
-import com.b3dgs.lionengine.game.state.StateInputDirectionalUpdater;
-import com.b3dgs.lionengine.game.state.StateTransition;
-import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
-import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Jump state implementation.
  */
-class StateJump extends StateAbstract implements StateInputDirectionalUpdater, TileCollidableListener
+class StateJump extends StateAbstract implements TileCollidableListener
 {
     private final AtomicBoolean ground = new AtomicBoolean();
     private final Transformable transformable;
@@ -52,9 +48,7 @@ class StateJump extends StateAbstract implements StateInputDirectionalUpdater, T
     private final TileCollidable tileCollidable;
     private final Force movement;
     private final Force jump;
-
-    /** Movement side. */
-    private double side;
+    private final EntityModel model;
 
     /**
      * Create the state.
@@ -72,12 +66,12 @@ class StateJump extends StateAbstract implements StateInputDirectionalUpdater, T
         mirrorable = featurable.getFeature(Mirrorable.class);
         tileCollidable = featurable.getFeature(TileCollidable.class);
 
-        final EntityModel model = featurable.getFeature(EntityModel.class);
+        model = featurable.getFeature(EntityModel.class);
         animator = model.getSurface();
         movement = model.getMovement();
         jump = model.getJump();
 
-        addTransition(new TransitionJumpToIdle());
+        addTransition(EntityState.IDLE, () -> ground.get());
     }
 
     @Override
@@ -88,7 +82,6 @@ class StateJump extends StateAbstract implements StateInputDirectionalUpdater, T
         animator.play(animation);
         tileCollidable.addListener(this);
         ground.set(false);
-        side = 0;
     }
 
     @Override
@@ -98,14 +91,9 @@ class StateJump extends StateAbstract implements StateInputDirectionalUpdater, T
     }
 
     @Override
-    public void updateInput(InputDeviceDirectional input)
-    {
-        side = input.getHorizontalDirection();
-    }
-
-    @Override
     public void update(double extrp)
     {
+        final double side = model.getInput().getHorizontalDirection();
         movement.setDestination(side * 3, 0);
         if (movement.getDirectionHorizontal() != 0)
         {
@@ -124,26 +112,6 @@ class StateJump extends StateAbstract implements StateInputDirectionalUpdater, T
             {
                 ground.set(true);
             }
-        }
-    }
-
-    /**
-     * Transition from {@link StateJump} to {@link StateIdle}.
-     */
-    private class TransitionJumpToIdle extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionJumpToIdle()
-        {
-            super(EntityState.IDLE);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return ground.get();
         }
     }
 }

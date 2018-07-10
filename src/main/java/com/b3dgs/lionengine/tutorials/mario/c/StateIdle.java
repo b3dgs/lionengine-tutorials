@@ -22,8 +22,6 @@ import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.state.StateAbstract;
-import com.b3dgs.lionengine.game.state.StateTransition;
-import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
@@ -51,8 +49,9 @@ class StateIdle extends StateAbstract
         animator = model.getSurface();
         movement = model.getMovement();
 
-        addTransition(new TransitionIdleToWalk());
-        addTransition(new TransitionIdleToJump());
+        final InputDeviceDirectional input = model.getInput();
+        addTransition(MarioState.WALK, () -> input.getHorizontalDirection() != 0);
+        addTransition(MarioState.JUMP, () -> input.getVerticalDirection() > 0);
     }
 
     @Override
@@ -68,45 +67,5 @@ class StateIdle extends StateAbstract
     public void update(double extrp)
     {
         // Nothing to do
-    }
-
-    /**
-     * Transition from {@link StateIdle} to {@link StateWalk}.
-     */
-    private class TransitionIdleToWalk extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionIdleToWalk()
-        {
-            super(MarioState.WALK);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return input.getHorizontalDirection() != 0;
-        }
-    }
-
-    /**
-     * Transition from {@link StateIdle} to {@link StateJump}.
-     */
-    private class TransitionIdleToJump extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionIdleToJump()
-        {
-            super(MarioState.JUMP);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return input.getVerticalDirection() > 0;
-        }
     }
 }

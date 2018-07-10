@@ -31,15 +31,12 @@ import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.game.state.StateAbstract;
-import com.b3dgs.lionengine.game.state.StateInputDirectionalUpdater;
-import com.b3dgs.lionengine.game.state.StateTransition;
-import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Walk state implementation.
  */
-class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, TileCollidableListener
+class StateWalk extends StateAbstract implements TileCollidableListener
 {
     /** Horizontal collision. */
     private final AtomicBoolean collide = new AtomicBoolean();
@@ -49,9 +46,8 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
     private final Animator animator;
     private final Animation animation;
     private final TileCollidable tileCollidable;
+    private final InputDeviceDirectional input;
 
-    /** Movement side. */
-    private double side;
     /** Played flag. */
     private boolean played;
 
@@ -73,10 +69,14 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
         final MarioModel model = featurable.getFeature(MarioModel.class);
         animator = model.getSurface();
         movement = model.getMovement();
+        input = model.getInput();
 
-        addTransition(new TransitionWalkToIdle());
-        addTransition(new TransitionWalkToTurn());
-        addTransition(new TransitionWalkToJump());
+        addTransition(MarioState.IDLE,
+                      () -> collide.get() || input.getHorizontalDirection() == 0 && input.getVerticalDirection() == 0);
+        addTransition(MarioState.TURN,
+                      () -> input.getHorizontalDirection() < 0 && movement.getDirectionHorizontal() > 0
+                            || input.getHorizontalDirection() > 0 && movement.getDirectionHorizontal() < 0);
+        addTransition(MarioState.JUMP, () -> input.getVerticalDirection() > 0);
     }
 
     @Override
@@ -85,7 +85,6 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
         movement.setVelocity(0.5);
         movement.setSensibility(0.1);
         tileCollidable.addListener(this);
-        side = 0;
         played = false;
         collide.set(false);
     }
@@ -97,12 +96,6 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
     }
 
     @Override
-    public void updateInput(InputDeviceDirectional input)
-    {
-        side = input.getHorizontalDirection();
-    }
-
-    @Override
     public void update(double extrp)
     {
         if (!played && movement.getDirectionHorizontal() != 0)
@@ -110,6 +103,8 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
             animator.play(animation);
             played = true;
         }
+
+        final double side = input.getHorizontalDirection();
         movement.setDestination(side * 3, 0);
         animator.setAnimSpeed(Math.abs(movement.getDirectionHorizontal()) / 12.0);
 
@@ -130,67 +125,6 @@ class StateWalk extends StateAbstract implements StateInputDirectionalUpdater, T
         {
             movement.setDirection(DirectionNone.INSTANCE);
             collide.set(true);
-        }
-    }
-
-    /**
-     * Transition from {@link StateWalk} to {@link StateIdle}.
-     */
-    private class TransitionWalkToIdle extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionWalkToIdle()
-        {
-            super(MarioState.IDLE);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return collide.get() || input.getHorizontalDirection() == 0 && input.getVerticalDirection() == 0;
-        }
-    }
-
-    /**
-     * Transition from {@link StateWalk} to {@link StateTurn}.
-     */
-    private class TransitionWalkToTurn extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionWalkToTurn()
-        {
-            super(MarioState.TURN);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return input.getHorizontalDirection() < 0 && movement.getDirectionHorizontal() > 0
-                   || input.getHorizontalDirection() > 0 && movement.getDirectionHorizontal() < 0;
-        }
-    }
-
-    /**
-     * Transition from {@link StateWalk} to {@link StateJump}.
-     */
-    private class TransitionWalkToJump extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionWalkToJump()
-        {
-            super(MarioState.JUMP);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return input.getVerticalDirection() > 0;
         }
     }
 }

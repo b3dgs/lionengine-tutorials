@@ -36,7 +36,6 @@ import com.b3dgs.lionengine.game.state.StateAnimationUtil;
 import com.b3dgs.lionengine.game.state.StateFactory;
 import com.b3dgs.lionengine.game.state.StateHandler;
 import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
-import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Mario updating implementation.
@@ -49,7 +48,6 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
     private final StateHandler handler = new StateHandler(factory);
     private final Setup setup;
     private final Camera camera;
-    private final InputDeviceDirectional keyboard;
 
     @FeatureGet private Mirrorable mirrorable;
     @FeatureGet private Transformable transformable;
@@ -69,7 +67,6 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
 
         this.setup = setup;
         camera = services.get(Camera.class);
-        keyboard = services.get(InputDeviceDirectional.class);
     }
 
     @Override
@@ -79,7 +76,6 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
 
         StateAnimationUtil.loadStates(MarioState.values(), factory, provider, setup);
         handler.changeState(MarioState.IDLE);
-        handler.addInput(keyboard);
 
         respawn();
     }

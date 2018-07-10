@@ -29,9 +29,7 @@ import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.game.state.StateAbstract;
-import com.b3dgs.lionengine.game.state.StateTransition;
-import com.b3dgs.lionengine.game.state.StateTransitionInputDirectionalChecker;
-import com.b3dgs.lionengine.io.InputDeviceDirectional;
+import com.b3dgs.lionengine.game.state.StateChecker;
 
 /**
  * Idle state implementation.
@@ -65,8 +63,24 @@ class StateIdle extends StateAbstract implements TileCollidableListener
         movement = model.getMovement();
         jump = model.getJump();
 
-        addTransition(new TransitionIdleToWalk());
-        addTransition(new TransitionIdleToJump());
+        addTransition(EntityState.IDLE, () -> model.getInput().getHorizontalDirection() != 0);
+        addTransition(EntityState.WALK, () -> model.getInput().getHorizontalDirection() != 0);
+        addTransition(EntityState.JUMP, new StateChecker()
+        {
+            @Override
+            public boolean check()
+            {
+                return model.getInput().getVerticalDirection() > 0 && canJump.get();
+            }
+
+            @Override
+            public void exit()
+            {
+                Sfx.JUMP.play();
+                jump.setDirection(0.0, 8.0);
+                canJump.set(false);
+            }
+        });
     }
 
     @Override
@@ -97,54 +111,6 @@ class StateIdle extends StateAbstract implements TileCollidableListener
         if (Axis.Y == axis && transformable.getY() < transformable.getOldY())
         {
             canJump.set(true);
-        }
-    }
-
-    /**
-     * Transition from {@link StateIdle} to {@link StateWalk}.
-     */
-    private class TransitionIdleToWalk extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionIdleToWalk()
-        {
-            super(EntityState.WALK);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return input.getHorizontalDirection() != 0;
-        }
-    }
-
-    /**
-     * Transition from {@link StateIdle} to {@link StateJump}.
-     */
-    private class TransitionIdleToJump extends StateTransition implements StateTransitionInputDirectionalChecker
-    {
-        /**
-         * Create the transition.
-         */
-        public TransitionIdleToJump()
-        {
-            super(EntityState.JUMP);
-        }
-
-        @Override
-        public boolean check(InputDeviceDirectional input)
-        {
-            return input.getVerticalDirection() > 0 && canJump.get();
-        }
-
-        @Override
-        public void exit()
-        {
-            Sfx.JUMP.play();
-            jump.setDirection(0.0, 8.0);
-            canJump.set(false);
         }
     }
 }

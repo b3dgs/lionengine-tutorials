@@ -30,6 +30,7 @@ import com.b3dgs.lionengine.game.feature.collidable.Collidable;
 import com.b3dgs.lionengine.graphic.drawable.Drawable;
 import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
 import com.b3dgs.lionengine.graphic.engine.SourceResolutionProvider;
+import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Entity model implementation.
@@ -42,6 +43,7 @@ class EntityModel extends FeatureModel
     private final Force jump = new Force();
     private final SpriteAnimated surface;
     private final SourceResolutionProvider source;
+    private InputDeviceDirectional input;
 
     @FeatureGet private Body body;
     @FeatureGet private Collidable collidable;
@@ -77,6 +79,16 @@ class EntityModel extends FeatureModel
     }
 
     /**
+     * Set the input used.
+     * 
+     * @param input The input used.
+     */
+    public void setInput(InputDeviceDirectional input)
+    {
+        this.input = input;
+    }
+
+    /**
      * Get the movement force.
      * 
      * @return The movement force.
@@ -104,5 +116,15 @@ class EntityModel extends FeatureModel
     public SpriteAnimated getSurface()
     {
         return surface;
+    }
+
+    /**
+     * Get current input.
+     * 
+     * @return The input used.
+     */
+    public InputDeviceDirectional getInput()
+    {
+        return input;
     }
 }
