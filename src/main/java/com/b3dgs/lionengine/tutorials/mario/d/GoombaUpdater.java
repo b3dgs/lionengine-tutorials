@@ -27,7 +27,6 @@ import com.b3dgs.lionengine.game.feature.collidable.CollidableListener;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
-import com.b3dgs.lionengine.game.state.StateAnimationUtil;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
@@ -57,8 +56,6 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
     @Override
     public void prepare(FeatureProvider provider)
     {
-        StateAnimationUtil.loadStates(GoombaState.values(), factory, provider, setup);
-
         super.prepare(provider);
 
         model.setInput(this);
@@ -122,7 +119,7 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
             collider.teleportY(transformable.getY() + transformable.getHeight());
             other.getFeature(EntityUpdater.class).jump();
             collidable.setEnabled(false);
-            changeState(GoombaState.DEATH);
+            changeState(StateDieGoomba.class);
             Sfx.CRUSH.play();
         }
     }

@@ -6,6 +6,7 @@
     <lionengine:feature>com.b3dgs.lionengine.game.feature.body.BodyModel</lionengine:feature>
     <lionengine:feature>com.b3dgs.lionengine.game.feature.collidable.CollidableModel</lionengine:feature>
     <lionengine:feature>com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableModel</lionengine:feature>
+    <lionengine:feature>com.b3dgs.lionengine.game.feature.state.StateHandler</lionengine:feature>
     <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.c.MarioModel</lionengine:feature>
     <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.c.MarioUpdater</lionengine:feature>
     <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.c.MarioRenderer</lionengine:feature>
@@ -37,10 +38,10 @@
     <lionengine:category axis="X" name="face_left" x="-6" y="15">
         <lionengine:group>block</lionengine:group>
     </lionengine:category>
-    <lionengine:animation end="7" name="turn" repeat="false" reversed="false" speed="0.125" start="7"/>
-    <lionengine:animation end="1" name="idle" repeat="false" reversed="false" speed="0.125" start="1"/>
-    <lionengine:animation end="6" name="walk" repeat="true" reversed="false" speed="0.25" start="4"/>
-    <lionengine:animation end="2" name="death" repeat="false" reversed="false" speed="0.25" start="2"/>
-    <lionengine:animation end="3" name="jump" repeat="false" reversed="false" speed="0.25" start="3"/>
+    <lionengine:animation end="7" name="StateTurn" repeat="false" reversed="false" speed="0.125" start="7"/>
+    <lionengine:animation end="1" name="StateIdle" repeat="false" reversed="false" speed="0.125" start="1"/>
+    <lionengine:animation end="6" name="StateWalk" repeat="true" reversed="false" speed="0.25" start="4"/>
+    <lionengine:animation end="2" name="StateDeath" repeat="false" reversed="false" speed="0.25" start="2"/>
+    <lionengine:animation end="3" name="StateJump" repeat="false" reversed="false" speed="0.25" start="3"/>
     <lionengine:collision height="15" mirror="false" name="default" offsetX="0" offsetY="0" width="12"/>
 </lionengine:featurable>

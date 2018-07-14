@@ -24,15 +24,14 @@ import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.Mirror;
 import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
 import com.b3dgs.lionengine.game.feature.Transformable;
+import com.b3dgs.lionengine.game.feature.state.StateAbstract;
+import com.b3dgs.lionengine.game.feature.state.StateChecker;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
-import com.b3dgs.lionengine.game.state.StateAbstract;
-import com.b3dgs.lionengine.game.state.StateChecker;
 
 /**
  * Walk state implementation.
@@ -57,34 +56,33 @@ class StateWalk extends StateAbstract implements TileCollidableListener
     /**
      * Create the state.
      * 
-     * @param featurable The featurable reference.
+     * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateWalk(Featurable featurable, Animation animation)
+    public StateWalk(EntityModel model, Animation animation)
     {
-        super(EntityState.WALK);
+        super();
 
+        this.model = model;
         this.animation = animation;
-        mirrorable = featurable.getFeature(Mirrorable.class);
-        tileCollidable = featurable.getFeature(TileCollidable.class);
-        transformable = featurable.getFeature(Transformable.class);
-
-        model = featurable.getFeature(EntityModel.class);
+        mirrorable = model.getFeature(Mirrorable.class);
+        tileCollidable = model.getFeature(TileCollidable.class);
+        transformable = model.getFeature(Transformable.class);
         animator = model.getSurface();
         movement = model.getMovement();
         jump = model.getJump();
 
-        addTransition(EntityState.IDLE,
+        addTransition(StateIdle.class,
                       () -> horizontalCollide.get()
                             || model.getInput().getHorizontalDirection() == 0
                                && model.getInput().getVerticalDirection() == 0);
-        addTransition(EntityState.TURN,
+        addTransition(StateTurn.class,
                       () -> model.getInput().getHorizontalDirection() < 0 && movement.getDirectionHorizontal() > 0
                             || model.getInput().getHorizontalDirection() > 0 && movement.getDirectionHorizontal() < 0);
-        addTransition(EntityState.JUMP, new StateChecker()
+        addTransition(StateJump.class, new StateChecker()
         {
             @Override
-            public boolean check()
+            public boolean getAsBoolean()
             {
                 return model.getInput().getVerticalDirection() > 0 && canJump.get();
             }

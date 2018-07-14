@@ -24,15 +24,14 @@ import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.Mirror;
 import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.body.Body;
+import com.b3dgs.lionengine.game.feature.state.StateAbstract;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
-import com.b3dgs.lionengine.game.state.StateAbstract;
 
 /**
  * Jump state implementation.
@@ -53,25 +52,24 @@ class StateJump extends StateAbstract implements TileCollidableListener
     /**
      * Create the state.
      * 
-     * @param featurable The featurable reference.
+     * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateJump(Featurable featurable, Animation animation)
+    public StateJump(EntityModel model, Animation animation)
     {
-        super(EntityState.JUMP);
+        super();
 
+        this.model = model;
         this.animation = animation;
-        transformable = featurable.getFeature(Transformable.class);
-        body = featurable.getFeature(Body.class);
-        mirrorable = featurable.getFeature(Mirrorable.class);
-        tileCollidable = featurable.getFeature(TileCollidable.class);
-
-        model = featurable.getFeature(EntityModel.class);
+        transformable = model.getFeature(Transformable.class);
+        body = model.getFeature(Body.class);
+        mirrorable = model.getFeature(Mirrorable.class);
+        tileCollidable = model.getFeature(TileCollidable.class);
         animator = model.getSurface();
         movement = model.getMovement();
         jump = model.getJump();
 
-        addTransition(EntityState.IDLE, () -> ground.get());
+        addTransition(StateIdle.class, () -> ground.get());
     }
 
     @Override

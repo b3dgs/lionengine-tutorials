@@ -21,16 +21,15 @@ import com.b3dgs.lionengine.AnimState;
 import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.feature.Identifiable;
-import com.b3dgs.lionengine.game.state.StateAbstract;
+import com.b3dgs.lionengine.game.feature.state.StateAbstract;
 
 /**
  * Goomba die state implementation.
  */
 class StateDieGoomba extends StateAbstract
 {
-    private final Featurable featurable;
+    private final EntityModel model;
     private final Force movement;
     private final Animator animator;
     private final Animation animation;
@@ -38,17 +37,15 @@ class StateDieGoomba extends StateAbstract
     /**
      * Create the state.
      * 
-     * @param featurable The featurable reference.
+     * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateDieGoomba(Featurable featurable, Animation animation)
+    public StateDieGoomba(EntityModel model, Animation animation)
     {
-        super(GoombaState.DEATH);
+        super();
 
-        this.featurable = featurable;
+        this.model = model;
         this.animation = animation;
-
-        final EntityModel model = featurable.getFeature(EntityModel.class);
         animator = model.getSurface();
         movement = model.getMovement();
     }
@@ -65,7 +62,7 @@ class StateDieGoomba extends StateAbstract
     {
         if (AnimState.FINISHED == animator.getAnimState())
         {
-            featurable.getFeature(Identifiable.class).destroy();
+            model.getFeature(Identifiable.class).destroy();
         }
     }
 }

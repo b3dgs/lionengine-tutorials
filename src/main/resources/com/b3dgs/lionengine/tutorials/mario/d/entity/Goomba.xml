@@ -6,6 +6,7 @@
     <lionengine:feature>com.b3dgs.lionengine.game.feature.body.BodyModel</lionengine:feature>
     <lionengine:feature>com.b3dgs.lionengine.game.feature.collidable.CollidableModel</lionengine:feature>
     <lionengine:feature>com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableModel</lionengine:feature>
+    <lionengine:feature>com.b3dgs.lionengine.game.feature.state.StateHandler</lionengine:feature>
     <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.d.EntityModel</lionengine:feature>
     <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.d.EntityRenderer</lionengine:feature>
     <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.d.GoombaUpdater</lionengine:feature>
@@ -13,11 +14,11 @@
     <lionengine:surface image="Goomba.png"/>
     <lionengine:frames horizontal="3" vertical="1"/>
     <lionengine:size height="16" width="16"/>
-    <lionengine:animation end="3" name="death" repeat="false" reversed="false" speed="0.1" start="3"/>
-    <lionengine:animation end="1" name="idle" repeat="false" reversed="false" speed="0.125" start="1"/>
-    <lionengine:animation end="2" name="walk" repeat="true" reversed="false" speed="0.25" start="1"/>
-    <lionengine:animation end="2" name="turn" repeat="false" reversed="false" speed="0.25" start="1"/>
-    <lionengine:animation end="2" name="jump" repeat="true" reversed="false" speed="0.25" start="1"/>
+    <lionengine:animation end="3" name="StateDieGoomba" repeat="false" reversed="false" speed="0.1" start="3"/>
+    <lionengine:animation end="1" name="StateIdle" repeat="false" reversed="false" speed="0.125" start="1"/>
+    <lionengine:animation end="2" name="StateWalk" repeat="true" reversed="false" speed="0.25" start="1"/>
+    <lionengine:animation end="2" name="StateTurn" repeat="false" reversed="false" speed="0.25" start="1"/>
+    <lionengine:animation end="2" name="StateJump" repeat="true" reversed="false" speed="0.25" start="1"/>
     <lionengine:category axis="Y" name="leg_right" x="6" y="0">
         <lionengine:group>block</lionengine:group>
     </lionengine:category>

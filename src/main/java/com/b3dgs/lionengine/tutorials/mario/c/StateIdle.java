@@ -20,8 +20,7 @@ package com.b3dgs.lionengine.tutorials.mario.c;
 import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.Featurable;
-import com.b3dgs.lionengine.game.state.StateAbstract;
+import com.b3dgs.lionengine.game.feature.state.StateAbstract;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
@@ -36,22 +35,20 @@ class StateIdle extends StateAbstract
     /**
      * Create the state.
      * 
-     * @param featurable The featurable reference.
+     * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateIdle(Featurable featurable, Animation animation)
+    public StateIdle(MarioModel model, Animation animation)
     {
-        super(MarioState.IDLE);
+        super();
 
         this.animation = animation;
-
-        final MarioModel model = featurable.getFeature(MarioModel.class);
         animator = model.getSurface();
         movement = model.getMovement();
 
         final InputDeviceDirectional input = model.getInput();
-        addTransition(MarioState.WALK, () -> input.getHorizontalDirection() != 0);
-        addTransition(MarioState.JUMP, () -> input.getVerticalDirection() > 0);
+        addTransition(StateWalk.class, () -> input.getHorizontalDirection() != 0);
+        addTransition(StateJump.class, () -> input.getVerticalDirection() > 0);
     }
 
     @Override

@@ -20,8 +20,7 @@ package com.b3dgs.lionengine.tutorials.mario.d;
 import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.Featurable;
-import com.b3dgs.lionengine.game.state.StateAbstract;
+import com.b3dgs.lionengine.game.feature.state.StateAbstract;
 
 /**
  * Mario die state implementation.
@@ -36,16 +35,14 @@ class StateDieMario extends StateAbstract
     /**
      * Create the state.
      * 
-     * @param featurable The featurable reference.
+     * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateDieMario(Featurable featurable, Animation animation)
+    public StateDieMario(EntityModel model, Animation animation)
     {
-        super(MarioState.DEATH);
+        super();
 
         this.animation = animation;
-
-        final EntityModel model = featurable.getFeature(EntityModel.class);
         animator = model.getSurface();
         movement = model.getMovement();
         jump = model.getJump();

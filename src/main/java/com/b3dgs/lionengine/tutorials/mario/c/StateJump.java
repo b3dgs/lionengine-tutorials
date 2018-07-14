@@ -22,13 +22,12 @@ import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.Mirror;
 import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
+import com.b3dgs.lionengine.game.feature.state.StateAbstract;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
-import com.b3dgs.lionengine.game.state.StateAbstract;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
@@ -47,24 +46,22 @@ class StateJump extends StateAbstract implements TileCollidableListener
     /**
      * Create the state.
      * 
-     * @param featurable The featurable reference.
+     * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateJump(Featurable featurable, Animation animation)
+    public StateJump(MarioModel model, Animation animation)
     {
-        super(MarioState.JUMP);
+        super();
 
         this.animation = animation;
-        mirrorable = featurable.getFeature(Mirrorable.class);
-        tileCollidable = featurable.getFeature(TileCollidable.class);
-
-        final MarioModel model = featurable.getFeature(MarioModel.class);
+        mirrorable = model.getFeature(Mirrorable.class);
+        tileCollidable = model.getFeature(TileCollidable.class);
         animator = model.getSurface();
         movement = model.getMovement();
         jump = model.getJump();
         input = model.getInput();
 
-        addTransition(MarioState.IDLE, () -> jump.getDirectionVertical() == 0);
+        addTransition(StateIdle.class, () -> jump.getDirectionVertical() == 0);
     }
 
     @Override

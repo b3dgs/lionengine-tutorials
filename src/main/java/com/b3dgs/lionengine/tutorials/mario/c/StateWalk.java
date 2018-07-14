@@ -24,13 +24,12 @@ import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.Mirror;
 import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
+import com.b3dgs.lionengine.game.feature.state.StateAbstract;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
-import com.b3dgs.lionengine.game.state.StateAbstract;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
@@ -54,29 +53,27 @@ class StateWalk extends StateAbstract implements TileCollidableListener
     /**
      * Create the state.
      * 
-     * @param featurable The featurable reference.
+     * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateWalk(Featurable featurable, Animation animation)
+    public StateWalk(MarioModel model, Animation animation)
     {
-        super(MarioState.WALK);
+        super();
 
         this.animation = animation;
 
-        mirrorable = featurable.getFeature(Mirrorable.class);
-        tileCollidable = featurable.getFeature(TileCollidable.class);
-
-        final MarioModel model = featurable.getFeature(MarioModel.class);
+        mirrorable = model.getFeature(Mirrorable.class);
+        tileCollidable = model.getFeature(TileCollidable.class);
         animator = model.getSurface();
         movement = model.getMovement();
         input = model.getInput();
 
-        addTransition(MarioState.IDLE,
+        addTransition(StateIdle.class,
                       () -> collide.get() || input.getHorizontalDirection() == 0 && input.getVerticalDirection() == 0);
-        addTransition(MarioState.TURN,
+        addTransition(StateTurn.class,
                       () -> input.getHorizontalDirection() < 0 && movement.getDirectionHorizontal() > 0
                             || input.getHorizontalDirection() > 0 && movement.getDirectionHorizontal() < 0);
-        addTransition(MarioState.JUMP, () -> input.getVerticalDirection() > 0);
+        addTransition(StateJump.class, () -> input.getVerticalDirection() > 0);
     }
 
     @Override

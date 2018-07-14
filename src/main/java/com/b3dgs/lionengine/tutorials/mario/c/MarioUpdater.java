@@ -28,13 +28,11 @@ import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.body.Body;
+import com.b3dgs.lionengine.game.feature.state.StateHandler;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
-import com.b3dgs.lionengine.game.state.StateAnimationUtil;
-import com.b3dgs.lionengine.game.state.StateFactory;
-import com.b3dgs.lionengine.game.state.StateHandler;
 import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
 
 /**
@@ -44,11 +42,9 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
 {
     private static final int GROUND = 32;
 
-    private final StateFactory factory = new StateFactory();
-    private final StateHandler handler = new StateHandler(factory);
-    private final Setup setup;
     private final Camera camera;
 
+    @FeatureGet private StateHandler handler;
     @FeatureGet private Mirrorable mirrorable;
     @FeatureGet private Transformable transformable;
     @FeatureGet private Body body;
@@ -65,7 +61,6 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
     {
         super();
 
-        this.setup = setup;
         camera = services.get(Camera.class);
     }
 
@@ -74,8 +69,7 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
     {
         super.prepare(provider);
 
-        StateAnimationUtil.loadStates(MarioState.values(), factory, provider, setup);
-        handler.changeState(MarioState.IDLE);
+        handler.changeState(StateIdle.class);
 
         respawn();
     }

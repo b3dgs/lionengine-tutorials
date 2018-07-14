@@ -30,14 +30,12 @@ import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
+import com.b3dgs.lionengine.game.feature.state.State;
+import com.b3dgs.lionengine.game.feature.state.StateHandler;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
-import com.b3dgs.lionengine.game.state.StateAnimationBased;
-import com.b3dgs.lionengine.game.state.StateAnimationUtil;
-import com.b3dgs.lionengine.game.state.StateFactory;
-import com.b3dgs.lionengine.game.state.StateHandler;
 import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
 
 /**
@@ -47,15 +45,12 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
 {
     private static final int GROUND = 32;
 
-    /** State factory. */
-    protected final StateFactory factory = new StateFactory();
-    /** State handler. */
-    protected final StateHandler handler = new StateHandler(factory);
     /** Entity configurer. */
     protected final Setup setup;
 
     private final Camera camera;
 
+    @FeatureGet private StateHandler handler;
     @FeatureGet private EntityModel model;
     @FeatureGet private Transformable transformable;
     @FeatureGet private TileCollidable tileCollidable;
@@ -82,8 +77,7 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
     {
         super.prepare(provider);
 
-        StateAnimationUtil.loadStates(EntityState.values(), factory, provider, setup);
-        handler.changeState(EntityState.IDLE);
+        handler.changeState(StateIdle.class);
     }
 
     /**
@@ -92,7 +86,7 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
     public void jump()
     {
         body.resetGravity();
-        changeState(EntityState.JUMP);
+        changeState(StateJump.class);
         model.getJump().setDirection(0.0, 6.0);
     }
 
@@ -102,7 +96,7 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
      * @param state The state to check.
      * @return <code>true</code> if it is this state, <code>false</code> else.
      */
-    public boolean isState(Enum<? extends StateAnimationBased> state)
+    public boolean isState(Class<? extends State> state)
     {
         return handler.isState(state);
     }
@@ -120,7 +114,7 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
         body.resetGravity();
         collidable.setEnabled(true);
         tileCollidable.setEnabled(true);
-        handler.changeState(EntityState.IDLE);
+        handler.changeState(StateIdle.class);
     }
 
     /**
@@ -128,7 +122,7 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
      * 
      * @param next The next state.
      */
-    public void changeState(Enum<?> next)
+    public void changeState(Class<? extends State> next)
     {
         handler.changeState(next);
     }

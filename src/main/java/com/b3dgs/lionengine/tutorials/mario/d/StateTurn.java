@@ -21,10 +21,9 @@ import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.Mirror;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
-import com.b3dgs.lionengine.game.state.StateAbstract;
-import com.b3dgs.lionengine.game.state.StateChecker;
+import com.b3dgs.lionengine.game.feature.state.StateAbstract;
+import com.b3dgs.lionengine.game.feature.state.StateChecker;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
@@ -41,24 +40,23 @@ class StateTurn extends StateAbstract
     /**
      * Create the state.
      * 
-     * @param featurable The featurable reference.
+     * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateTurn(Featurable featurable, Animation animation)
+    public StateTurn(EntityModel model, Animation animation)
     {
-        super(EntityState.TURN);
+        super();
 
+        this.model = model;
         this.animation = animation;
-        mirrorable = featurable.getFeature(Mirrorable.class);
-
-        model = featurable.getFeature(EntityModel.class);
+        mirrorable = model.getFeature(Mirrorable.class);
         animator = model.getSurface();
         movement = model.getMovement();
 
-        addTransition(EntityState.IDLE, new StateChecker()
+        addTransition(StateIdle.class, new StateChecker()
         {
             @Override
-            public boolean check()
+            public boolean getAsBoolean()
             {
                 final InputDeviceDirectional input = model.getInput();
                 return input.getHorizontalDirection() == 0
@@ -72,14 +70,14 @@ class StateTurn extends StateAbstract
                 mirrorable.mirror(mirrorable.getMirror() == Mirror.HORIZONTAL ? Mirror.NONE : Mirror.HORIZONTAL);
             }
         });
-        addTransition(EntityState.WALK,
+        addTransition(StateWalk.class,
                       () -> (model.getInput().getHorizontalDirection() < 0 && movement.getDirectionHorizontal() < 0
                              || model.getInput().getHorizontalDirection() > 0 && movement.getDirectionHorizontal() > 0)
                             && model.getInput().getVerticalDirection() == 0);
-        addTransition(EntityState.JUMP, new StateChecker()
+        addTransition(StateJump.class, new StateChecker()
         {
             @Override
-            public boolean check()
+            public boolean getAsBoolean()
             {
                 return model.getInput().getVerticalDirection() > 0;
             }
