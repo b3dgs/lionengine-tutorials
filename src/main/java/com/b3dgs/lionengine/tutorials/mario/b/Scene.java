@@ -35,7 +35,7 @@ import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersisterMode
 import com.b3dgs.lionengine.io.FileWriting;
 
 /**
- * Game loop designed to handle our little world.
+ * Game loop designed to handle our world.
  */
 class Scene extends SequenceGame
 {
@@ -72,7 +72,7 @@ class Scene extends SequenceGame
     {
         super(context, NATIVE, services -> new World(services));
 
-        getInputDevice(Keyboard.class).addActionPressed(KeyboardAwt.ESCAPE, () -> end());
+        getInputDevice(Keyboard.class).addActionPressed(KeyboardAwt.ESCAPE, this::end);
     }
 
     @Override

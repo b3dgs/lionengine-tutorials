@@ -25,7 +25,7 @@ import com.b3dgs.lionengine.graphic.Graphic;
 import com.b3dgs.lionengine.graphic.engine.Sequence;
 
 /**
- * Game loop designed to handle our little world.
+ * Game loop designed to handle our world.
  */
 class Scene extends Sequence
 {
@@ -41,24 +41,24 @@ class Scene extends Sequence
     {
         super(context, NATIVE);
 
-        getInputDevice(Keyboard.class).addActionPressed(KeyboardAwt.ESCAPE, () -> end());
+        getInputDevice(Keyboard.class).addActionPressed(KeyboardAwt.ESCAPE, this::end);
     }
 
     @Override
     public void load()
     {
-        // Load
+        // load resources here, called first and one time
     }
 
     @Override
     public void update(double extrp)
     {
-        // Update
+        // update routine
     }
 
     @Override
     public void render(Graphic g)
     {
-        // render
+        // render routine called after update
     }
 }
