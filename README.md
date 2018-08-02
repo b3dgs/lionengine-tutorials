@@ -1,16 +1,17 @@
-# lionengine-tutorials
-LionEngine tutorials by thematics
+# Tutorials
+
+## Platform games
 
 ### Mario
 
 * Part A
->  * Main app and base scene
+  * Main app and base scene
 
 * Part B
->  * World usage base, linked to the scene
+  * World usage base, linked to the scene
 
 * Part C
->  * Basic gameplay, map tile collision showcase
+  * Basic gameplay, map tile collision showcase
 
 * Part D
->  * Enemies with automatic moves, music and sound FX
+  * Enemies with automatic moves, music and sound FX
