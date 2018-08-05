@@ -2,7 +2,7 @@
 
 ## Platform games
 
-### Mario
+### Mario base
 
 * A: Main app and base scene
 * B: World usage base, linked to the scene
