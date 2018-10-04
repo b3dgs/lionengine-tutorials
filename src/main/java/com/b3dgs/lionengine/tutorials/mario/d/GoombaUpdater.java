@@ -26,6 +26,7 @@ import com.b3dgs.lionengine.game.feature.collidable.Collidable;
 import com.b3dgs.lionengine.game.feature.collidable.CollidableListener;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
@@ -100,11 +101,11 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
     }
 
     @Override
-    public void notifyTileCollided(Tile tile, Axis axis)
+    public void notifyTileCollided(Tile tile, CollisionCategory category)
     {
-        super.notifyTileCollided(tile, axis);
+        super.notifyTileCollided(tile, category);
 
-        if (Axis.X == axis)
+        if (Axis.X == category.getAxis())
         {
             side = -side;
         }

@@ -30,6 +30,7 @@ import com.b3dgs.lionengine.game.feature.state.StateAbstract;
 import com.b3dgs.lionengine.game.feature.state.StateChecker;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 
@@ -137,14 +138,14 @@ class StateWalk extends StateAbstract implements TileCollidableListener
     }
 
     @Override
-    public void notifyTileCollided(Tile tile, Axis axis)
+    public void notifyTileCollided(Tile tile, CollisionCategory category)
     {
-        if (Axis.X == axis)
+        if (Axis.X == category.getAxis())
         {
             movement.setDirection(DirectionNone.INSTANCE);
             horizontalCollide.set(true);
         }
-        else if (Axis.Y == axis && transformable.getY() < transformable.getOldY())
+        else if (Axis.Y == category.getAxis() && transformable.getY() < transformable.getOldY())
         {
             canJump.set(true);
         }

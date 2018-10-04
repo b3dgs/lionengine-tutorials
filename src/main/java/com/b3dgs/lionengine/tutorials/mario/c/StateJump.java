@@ -26,6 +26,7 @@ import com.b3dgs.lionengine.game.feature.Mirrorable;
 import com.b3dgs.lionengine.game.feature.state.StateAbstract;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
@@ -92,9 +93,9 @@ class StateJump extends StateAbstract implements TileCollidableListener
     }
 
     @Override
-    public void notifyTileCollided(Tile tile, Axis axis)
+    public void notifyTileCollided(Tile tile, CollisionCategory category)
     {
-        if (Axis.Y == axis)
+        if (Axis.Y == category.getAxis())
         {
             jump.setDirection(DirectionNone.INSTANCE);
         }
