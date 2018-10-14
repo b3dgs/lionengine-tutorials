@@ -24,6 +24,7 @@ import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
 import com.b3dgs.lionengine.game.feature.collidable.CollidableListener;
+import com.b3dgs.lionengine.game.feature.collidable.Collision;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
@@ -75,7 +76,7 @@ class MarioUpdater extends EntityUpdater implements CollidableListener
     }
 
     @Override
-    public void notifyCollided(Collidable other)
+    public void notifyCollided(Collidable other, Collision collision)
     {
         if (transformable.getY() >= transformable.getOldY()
             && !other.getFeature(EntityUpdater.class).isState(StateDieGoomba.class))

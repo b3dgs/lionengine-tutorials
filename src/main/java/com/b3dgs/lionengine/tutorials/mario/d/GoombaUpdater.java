@@ -24,6 +24,7 @@ import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
 import com.b3dgs.lionengine.game.feature.collidable.CollidableListener;
+import com.b3dgs.lionengine.game.feature.collidable.Collision;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
@@ -112,7 +113,7 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
     }
 
     @Override
-    public void notifyCollided(Collidable other)
+    public void notifyCollided(Collidable other, Collision collision)
     {
         final Transformable collider = other.getFeature(Transformable.class);
         if (collider.getY() < collider.getOldY() && collider.getY() > transformable.getY())
