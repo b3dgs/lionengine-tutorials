@@ -22,6 +22,7 @@ import com.b3dgs.lionengine.game.FeatureProvider;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.FramesConfig;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
+import com.b3dgs.lionengine.game.feature.FeatureInterface;
 import com.b3dgs.lionengine.game.feature.FeatureModel;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
@@ -34,6 +35,7 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
 /**
  * Mario model implementation.
  */
+@FeatureInterface
 class MarioModel extends FeatureModel
 {
     private static final double GRAVITY = 7.0;
@@ -63,7 +65,6 @@ class MarioModel extends FeatureModel
         final FramesConfig frames = FramesConfig.imports(setup);
         surface = Drawable.loadSpriteAnimated(setup.getSurface(), frames.getHorizontal(), frames.getVertical());
         surface.setOrigin(Origin.CENTER_BOTTOM);
-        surface.setFrameOffsets(-1, 0);
     }
 
     @Override
