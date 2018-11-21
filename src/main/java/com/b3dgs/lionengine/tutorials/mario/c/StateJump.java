@@ -23,6 +23,7 @@ import com.b3dgs.lionengine.Mirror;
 import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
+import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.state.StateAbstract;
 import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
@@ -40,6 +41,7 @@ class StateJump extends StateAbstract implements TileCollidableListener
     private final Mirrorable mirrorable;
     private final Animator animator;
     private final Animation animation;
+    private final Transformable transformable;
     private final TileCollidable tileCollidable;
     private final Force movement;
     private final InputDeviceDirectional input;
@@ -56,6 +58,7 @@ class StateJump extends StateAbstract implements TileCollidableListener
 
         this.animation = animation;
         mirrorable = model.getFeature(Mirrorable.class);
+        transformable = model.getFeature(Transformable.class);
         tileCollidable = model.getFeature(TileCollidable.class);
         animator = model.getSurface();
         movement = model.getMovement();
@@ -72,6 +75,7 @@ class StateJump extends StateAbstract implements TileCollidableListener
         movement.setSensibility(0.1);
         animator.play(animation);
         jump.setDirection(0.0, 8.0);
+        tileCollidable.setEnabled(false);
         tileCollidable.addListener(this);
     }
 
@@ -89,6 +93,10 @@ class StateJump extends StateAbstract implements TileCollidableListener
         if (movement.getDirectionHorizontal() != 0)
         {
             mirrorable.mirror(movement.getDirectionHorizontal() < 0 ? Mirror.HORIZONTAL : Mirror.NONE);
+        }
+        if (transformable.getY() < transformable.getOldY())
+        {
+            tileCollidable.setEnabled(true);
         }
     }
 
