@@ -22,13 +22,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.Mirror;
-import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
 import com.b3dgs.lionengine.game.feature.state.StateAbstract;
-import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionResult;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
@@ -38,8 +37,11 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
  */
 class StateWalk extends StateAbstract implements TileCollidableListener
 {
-    /** Horizontal collision. */
-    private final AtomicBoolean collide = new AtomicBoolean();
+    private static final String CATEGORY_KNEE_LEFT = "knee_l";
+    private static final String CATEGORY_KNEE_RIGHT = "knee_r";
+
+    private final AtomicBoolean collideX = new AtomicBoolean();
+    private final AtomicBoolean collideY = new AtomicBoolean();
 
     private final Force movement;
     private final Mirrorable mirrorable;
@@ -70,32 +72,33 @@ class StateWalk extends StateAbstract implements TileCollidableListener
         input = model.getInput();
 
         addTransition(StateIdle.class,
-                      () -> collide.get() || input.getHorizontalDirection() == 0 && input.getVerticalDirection() == 0);
+                      () -> collideX.get() || input.getHorizontalDirection() == 0 && input.getVerticalDirection() == 0);
         addTransition(StateTurn.class,
                       () -> input.getHorizontalDirection() < 0 && movement.getDirectionHorizontal() > 0
                             || input.getHorizontalDirection() > 0 && movement.getDirectionHorizontal() < 0);
         addTransition(StateJump.class, () -> input.getVerticalDirection() > 0);
+        addTransition(StateFall.class, () -> !collideY.get());
     }
 
     @Override
     public void enter()
     {
-        movement.setVelocity(0.5);
-        movement.setSensibility(0.1);
         tileCollidable.addListener(this);
         played = false;
-        collide.set(false);
+        collideX.set(false);
     }
 
     @Override
     public void exit()
     {
-        tileCollidable.addListener(this);
+        tileCollidable.removeListener(this);
     }
 
     @Override
     public void update(double extrp)
     {
+        collideY.set(false);
+
         if (!played && movement.getDirectionHorizontal() != 0)
         {
             animator.play(animation);
@@ -117,12 +120,26 @@ class StateWalk extends StateAbstract implements TileCollidableListener
     }
 
     @Override
-    public void notifyTileCollided(Tile tile, CollisionCategory category)
+    public void notifyTileCollided(CollisionResult result, CollisionCategory category)
     {
         if (Axis.X == category.getAxis())
         {
-            movement.setDirection(DirectionNone.INSTANCE);
-            collide.set(true);
+            // Allow to exit collision when moving on the opposite
+            if (!(CATEGORY_KNEE_LEFT.equals(category.getName())
+                  && input.getHorizontalDirection() < 0
+                  && movement.getDirectionHorizontal() <= 0)
+                && !(CATEGORY_KNEE_RIGHT.equals(category.getName())
+                     && input.getHorizontalDirection() > 0
+                     && movement.getDirectionHorizontal() >= 0))
+            {
+                tileCollidable.apply(result);
+                collideX.set(true);
+            }
+        }
+        else if (Axis.Y == category.getAxis())
+        {
+            tileCollidable.apply(result);
+            collideY.set(true);
         }
     }
 }

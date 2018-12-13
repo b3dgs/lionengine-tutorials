@@ -19,18 +19,25 @@ package com.b3dgs.lionengine.tutorials.mario.c;
 
 import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
+import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.feature.state.StateAbstract;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionResult;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Idle state implementation.
  */
-class StateIdle extends StateAbstract
+class StateIdle extends StateAbstract implements TileCollidableListener
 {
     private final Animator animator;
     private final Animation animation;
     private final Force movement;
+    private final InputDeviceDirectional input;
+    private final TileCollidable tileCollidable;
 
     /**
      * Create the state.
@@ -45,8 +52,9 @@ class StateIdle extends StateAbstract
         this.animation = animation;
         animator = model.getSurface();
         movement = model.getMovement();
+        input = model.getInput();
+        tileCollidable = model.getFeature(TileCollidable.class);
 
-        final InputDeviceDirectional input = model.getInput();
         addTransition(StateWalk.class, () -> input.getHorizontalDirection() != 0);
         addTransition(StateJump.class, () -> input.getVerticalDirection() > 0);
     }
@@ -54,15 +62,26 @@ class StateIdle extends StateAbstract
     @Override
     public void enter()
     {
-        movement.setDestination(0.0, 0.0);
-        movement.setVelocity(0.3);
-        movement.setSensibility(0.01);
+        tileCollidable.addListener(this);
+        movement.setDirection(DirectionNone.INSTANCE);
         animator.play(animation);
+    }
+
+    @Override
+    public void exit()
+    {
+        tileCollidable.removeListener(this);
     }
 
     @Override
     public void update(double extrp)
     {
-        // Nothing to do
+        movement.setDestination(0.0, 0.0);
+    }
+
+    @Override
+    public void notifyTileCollided(CollisionResult result, CollisionCategory category)
+    {
+        tileCollidable.apply(result);
     }
 }

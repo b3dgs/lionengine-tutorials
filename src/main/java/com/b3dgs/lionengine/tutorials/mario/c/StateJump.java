@@ -17,17 +17,18 @@
  */
 package com.b3dgs.lionengine.tutorials.mario.c;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.Mirror;
-import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.state.StateAbstract;
-import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionResult;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
@@ -37,6 +38,8 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
  */
 class StateJump extends StateAbstract implements TileCollidableListener
 {
+    private final AtomicBoolean collideX = new AtomicBoolean();
+
     private final Force jump;
     private final Mirrorable mirrorable;
     private final Animator animator;
@@ -65,18 +68,21 @@ class StateJump extends StateAbstract implements TileCollidableListener
         jump = model.getJump();
         input = model.getInput();
 
-        addTransition(StateIdle.class, () -> jump.getDirectionVertical() == 0);
+        addTransition(StateFall.class,
+                      () -> Double.compare(jump.getDirectionVertical(), 0.0) <= 0
+                            || Double.compare(transformable.getY(), transformable.getOldY()) <= 0);
     }
 
     @Override
     public void enter()
     {
-        movement.setVelocity(0.5);
-        movement.setSensibility(0.1);
         animator.play(animation);
-        jump.setDirection(0.0, 8.0);
-        tileCollidable.setEnabled(false);
+
+        jump.setDirection(0.0, 10.0);
+        jump.setDestination(0.0, 0.0);
+
         tileCollidable.addListener(this);
+        collideX.set(false);
     }
 
     @Override
@@ -94,18 +100,22 @@ class StateJump extends StateAbstract implements TileCollidableListener
         {
             mirrorable.mirror(movement.getDirectionHorizontal() < 0 ? Mirror.HORIZONTAL : Mirror.NONE);
         }
-        if (transformable.getY() < transformable.getOldY())
-        {
-            tileCollidable.setEnabled(true);
-        }
     }
 
     @Override
-    public void notifyTileCollided(Tile tile, CollisionCategory category)
+    public void notifyTileCollided(CollisionResult result, CollisionCategory category)
     {
-        if (Axis.Y == category.getAxis())
+        if (Axis.X == category.getAxis())
         {
-            jump.setDirection(DirectionNone.INSTANCE);
+            tileCollidable.apply(result);
+        }
+        else if (Axis.Y == category.getAxis())
+        {
+            if (transformable.getY() < transformable.getOldY())
+            {
+                tileCollidable.apply(result);
+                collideX.set(true);
+            }
         }
     }
 }

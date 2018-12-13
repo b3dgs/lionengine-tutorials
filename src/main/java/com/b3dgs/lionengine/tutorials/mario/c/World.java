@@ -29,10 +29,14 @@ import com.b3dgs.lionengine.game.feature.tile.map.MapTile;
 import com.b3dgs.lionengine.game.feature.tile.map.MapTileGame;
 import com.b3dgs.lionengine.game.feature.tile.map.MapTileGroup;
 import com.b3dgs.lionengine.game.feature.tile.map.MapTileGroupModel;
+import com.b3dgs.lionengine.game.feature.tile.map.MapTileRendererModel;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.MapTileCollision;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.MapTileCollisionModel;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.MapTileCollisionRenderer;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.MapTileCollisionRendererModel;
 import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersister;
 import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersisterModel;
+import com.b3dgs.lionengine.game.feature.tile.map.viewer.MapTileViewer;
 import com.b3dgs.lionengine.game.feature.tile.map.viewer.MapTileViewerModel;
 import com.b3dgs.lionengine.graphic.ColorRgba;
 import com.b3dgs.lionengine.graphic.Graphic;
@@ -90,6 +94,14 @@ class World extends WorldGame
         mapPersister.load(file);
         mapGroup.loadGroups(Medias.create("map", "groups.xml"));
         mapCollision.loadCollisions(Medias.create("map", "formulas.xml"), Medias.create("map", "collisions.xml"));
+
+        final MapTileCollisionRenderer mapCollisionRenderer;
+        mapCollisionRenderer = map.addFeatureAndGet(new MapTileCollisionRendererModel(services));
+        mapCollisionRenderer.createCollisionDraw();
+
+        final MapTileViewer mapViewer = map.getFeature(MapTileViewer.class);
+        mapViewer.addRenderer(new MapTileRendererModel());
+        mapViewer.addRenderer(mapCollisionRenderer);
 
         final Featurable mario = factory.create(MARIO);
         handler.add(mario);

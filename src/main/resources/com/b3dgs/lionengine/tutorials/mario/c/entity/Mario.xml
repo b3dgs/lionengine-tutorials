@@ -14,28 +14,16 @@
     <lionengine:surface image="Mario.png"/>
     <lionengine:frames horizontal="7" vertical="1"/>
     <lionengine:size height="16" width="16"/>
-    <lionengine:category axis="Y" name="leg_right" x="6" y="0">
+    <lionengine:category axis="Y" name="leg_l" x="6" y="0">
         <lionengine:group>block</lionengine:group>
     </lionengine:category>
-    <lionengine:category axis="Y" name="leg_left" x="-6" y="0">
+    <lionengine:category axis="Y" name="leg_r" x="-6" y="0">
         <lionengine:group>block</lionengine:group>
     </lionengine:category>
-    <lionengine:category axis="X" name="knee_right" x="6" y="0">
+    <lionengine:category axis="X" name="knee_l" x="7" y="1">
         <lionengine:group>block</lionengine:group>
     </lionengine:category>
-    <lionengine:category axis="X" name="knee_left" x="-6" y="0">
-        <lionengine:group>block</lionengine:group>
-    </lionengine:category>
-    <lionengine:category axis="Y" name="head_right" x="6" y="15">
-        <lionengine:group>block</lionengine:group>
-    </lionengine:category>
-    <lionengine:category axis="Y" name="head_left" x="-6" y="15">
-        <lionengine:group>block</lionengine:group>
-    </lionengine:category>
-    <lionengine:category axis="X" name="face_right" x="6" y="15">
-        <lionengine:group>block</lionengine:group>
-    </lionengine:category>
-    <lionengine:category axis="X" name="face_left" x="-6" y="15">
+    <lionengine:category axis="X" name="knee_r" x="-7" y="1">
         <lionengine:group>block</lionengine:group>
     </lionengine:category>
     <lionengine:animation end="7" name="StateTurn" repeat="false" reversed="false" speed="0.125" start="7"/>
@@ -43,5 +31,6 @@
     <lionengine:animation end="6" name="StateWalk" repeat="true" reversed="false" speed="0.25" start="4"/>
     <lionengine:animation end="2" name="StateDeath" repeat="false" reversed="false" speed="0.25" start="2"/>
     <lionengine:animation end="3" name="StateJump" repeat="false" reversed="false" speed="0.25" start="3"/>
+    <lionengine:animation end="3" name="StateFall" repeat="false" reversed="false" speed="0.25" start="3"/>
     <lionengine:collision height="15" mirror="false" name="default" offsetX="0" offsetY="0" width="12"/>
 </lionengine:featurable>

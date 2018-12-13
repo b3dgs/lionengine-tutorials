@@ -30,24 +30,20 @@ import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.game.feature.state.StateHandler;
-import com.b3dgs.lionengine.game.feature.tile.Tile;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
 
 /**
  * Mario updating implementation.
  */
 @FeatureInterface
-class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableListener
+class MarioUpdater extends FeatureModel implements Refreshable
 {
-    private static final int GROUND = 32;
+    private static final int GROUND = 31;
 
     private final Camera camera;
 
-    @FeatureGet private StateHandler handler;
+    @FeatureGet private StateHandler state;
     @FeatureGet private Mirrorable mirrorable;
     @FeatureGet private Transformable transformable;
     @FeatureGet private Body body;
@@ -72,7 +68,7 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
     {
         super.prepare(provider);
 
-        handler.changeState(StateIdle.class);
+        state.changeState(StateIdle.class);
 
         respawn();
     }
@@ -91,12 +87,13 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
     @Override
     public void update(double extrp)
     {
-        handler.update(extrp);
-        mirrorable.update(extrp);
+        state.update(extrp);
         model.getMovement().update(extrp);
         model.getJump().update(extrp);
-        body.update(extrp);
+        transformable.moveLocation(extrp, body, model.getMovement(), model.getJump());
         tileCollidable.update(extrp);
+        state.postUpdate();
+        mirrorable.update(extrp);
 
         if (transformable.getY() < 0)
         {
@@ -107,14 +104,5 @@ class MarioUpdater extends FeatureModel implements Refreshable, TileCollidableLi
         surface.setMirror(mirrorable.getMirror());
         surface.update(extrp);
         surface.setLocation(camera, transformable);
-    }
-
-    @Override
-    public void notifyTileCollided(Tile tile, CollisionCategory category)
-    {
-        if (Axis.Y == category.getAxis() && transformable.getY() < transformable.getOldY())
-        {
-            body.resetGravity();
-        }
     }
 }

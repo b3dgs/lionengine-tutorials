@@ -41,6 +41,7 @@ class Scene extends SequenceGame
 {
     /** Native resolution. */
     public static final Resolution NATIVE = new Resolution(320, 240, 60);
+
     private static final Media LEVEL = Medias.create("map", "level.lvl");
 
     /**
