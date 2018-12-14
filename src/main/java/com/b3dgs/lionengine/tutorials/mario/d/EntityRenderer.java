@@ -17,29 +17,46 @@
  */
 package com.b3dgs.lionengine.tutorials.mario.d;
 
+import com.b3dgs.lionengine.game.feature.Camera;
 import com.b3dgs.lionengine.game.feature.Displayable;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
+import com.b3dgs.lionengine.game.feature.FeatureInterface;
 import com.b3dgs.lionengine.game.feature.FeatureModel;
+import com.b3dgs.lionengine.game.feature.Services;
+import com.b3dgs.lionengine.game.feature.Setup;
+import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.graphic.Graphic;
+import com.b3dgs.lionengine.graphic.drawable.Sprite;
 
 /**
  * Entity rendering implementation.
  */
+@FeatureInterface
 class EntityRenderer extends FeatureModel implements Displayable
 {
+    private final Camera camera;
+
     @FeatureGet private EntityModel model;
+    @FeatureGet private Transformable transformable;
 
     /**
      * Constructor.
+     * 
+     * @param services The services reference.
+     * @param setup The setup reference.
      */
-    public EntityRenderer()
+    public EntityRenderer(Services services, Setup setup)
     {
         super();
+
+        camera = services.get(Camera.class);
     }
 
     @Override
     public void render(Graphic g)
     {
+        final Sprite surface = model.getSurface();
+        surface.setLocation(camera, transformable);
         model.getSurface().render(g);
     }
 }

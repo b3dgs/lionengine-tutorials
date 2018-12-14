@@ -19,6 +19,8 @@ package com.b3dgs.lionengine.tutorials.mario.d;
 
 import com.b3dgs.lionengine.game.FeatureProvider;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
+import com.b3dgs.lionengine.game.feature.FeatureInterface;
+import com.b3dgs.lionengine.game.feature.Refreshable;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.Transformable;
@@ -31,7 +33,8 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
 /**
  * Mario specific implementation.
  */
-class MarioUpdater extends EntityUpdater implements CollidableListener
+@FeatureInterface
+class MarioUpdater extends EntityUpdater implements Refreshable, CollidableListener
 {
     private final Services services;
 
@@ -79,7 +82,7 @@ class MarioUpdater extends EntityUpdater implements CollidableListener
     public void notifyCollided(Collidable other, Collision collision)
     {
         if (transformable.getY() >= transformable.getOldY()
-            && !other.getFeature(EntityUpdater.class).isState(StateDieGoomba.class))
+            && !other.getFeature(GoombaUpdater.class).isState(StateDieGoomba.class))
         {
             collidable.setEnabled(false);
             tileCollidable.setEnabled(false);

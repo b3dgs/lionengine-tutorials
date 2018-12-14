@@ -19,30 +19,37 @@ package com.b3dgs.lionengine.tutorials.mario.d;
 
 import com.b3dgs.lionengine.game.FeatureProvider;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
+import com.b3dgs.lionengine.game.feature.FeatureInterface;
+import com.b3dgs.lionengine.game.feature.Refreshable;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
 import com.b3dgs.lionengine.game.feature.collidable.CollidableListener;
 import com.b3dgs.lionengine.game.feature.collidable.Collision;
-import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionResult;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Goomba specific implementation.
  */
-class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, CollidableListener
+@FeatureInterface
+class GoombaUpdater extends EntityUpdater
+                    implements Refreshable, InputDeviceDirectional, CollidableListener, TileCollidableListener
 {
+    private static final double SPEED_X = 0.25;
+
     @FeatureGet private EntityModel model;
     @FeatureGet private Transformable transformable;
     @FeatureGet private TileCollidable tileCollidable;
     @FeatureGet private Collidable collidable;
 
     /** Side movement. */
-    private double side = 0.25;
+    private double side = SPEED_X;
 
     /**
      * Constructor.
@@ -102,13 +109,18 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
     }
 
     @Override
-    public void notifyTileCollided(Tile tile, CollisionCategory category)
+    public void notifyTileCollided(CollisionResult result, CollisionCategory category)
     {
-        super.notifyTileCollided(tile, category);
-
         if (Axis.X == category.getAxis())
         {
-            side = -side;
+            if (category.getName().contains("knee_l"))
+            {
+                side = -SPEED_X;
+            }
+            else if (category.getName().contains("knee_r"))
+            {
+                side = SPEED_X;
+            }
         }
     }
 
@@ -119,7 +131,7 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
         if (collider.getY() < collider.getOldY() && collider.getY() > transformable.getY())
         {
             collider.teleportY(transformable.getY() + transformable.getHeight());
-            other.getFeature(EntityUpdater.class).jump();
+            other.getFeature(MarioUpdater.class).jump();
             collidable.setEnabled(false);
             changeState(StateDieGoomba.class);
             Sfx.CRUSH.play();

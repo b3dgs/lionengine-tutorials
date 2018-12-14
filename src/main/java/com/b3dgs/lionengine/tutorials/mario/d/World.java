@@ -101,7 +101,7 @@ class World extends WorldGame
         tracker.track(mario);
         handler.add(tracker);
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 5; i++)
         {
             final Featurable goomba = factory.create(GOOMBA);
             goomba.getFeature(GoombaUpdater.class).respawn(500 + i * 50);

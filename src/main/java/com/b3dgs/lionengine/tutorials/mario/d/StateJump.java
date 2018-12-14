@@ -22,33 +22,32 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.Mirror;
-import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
 import com.b3dgs.lionengine.game.feature.Transformable;
-import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.game.feature.state.StateAbstract;
-import com.b3dgs.lionengine.game.feature.tile.Tile;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionResult;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
+import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Jump state implementation.
  */
 class StateJump extends StateAbstract implements TileCollidableListener
 {
-    private final AtomicBoolean ground = new AtomicBoolean();
-    private final Transformable transformable;
-    private final Body body;
+    private final AtomicBoolean collideX = new AtomicBoolean();
+
+    private final Force jump;
     private final Mirrorable mirrorable;
     private final Animator animator;
     private final Animation animation;
+    private final Transformable transformable;
     private final TileCollidable tileCollidable;
     private final Force movement;
-    private final Force jump;
-    private final EntityModel model;
+    private final InputDeviceDirectional input;
 
     /**
      * Create the state.
@@ -60,27 +59,30 @@ class StateJump extends StateAbstract implements TileCollidableListener
     {
         super();
 
-        this.model = model;
         this.animation = animation;
-        transformable = model.getFeature(Transformable.class);
-        body = model.getFeature(Body.class);
         mirrorable = model.getFeature(Mirrorable.class);
+        transformable = model.getFeature(Transformable.class);
         tileCollidable = model.getFeature(TileCollidable.class);
         animator = model.getSurface();
         movement = model.getMovement();
         jump = model.getJump();
+        input = model.getInput();
 
-        addTransition(StateIdle.class, () -> ground.get());
+        addTransition(StateFall.class,
+                      () -> Double.compare(jump.getDirectionVertical(), 0.0) <= 0
+                            || Double.compare(transformable.getY(), transformable.getOldY()) <= 0);
     }
 
     @Override
     public void enter()
     {
-        movement.setVelocity(0.5);
-        movement.setSensibility(0.1);
         animator.play(animation);
+
+        jump.setDirection(0.0, 10.0);
+        jump.setDestination(0.0, 0.0);
+
         tileCollidable.addListener(this);
-        ground.set(false);
+        collideX.set(false);
     }
 
     @Override
@@ -92,7 +94,7 @@ class StateJump extends StateAbstract implements TileCollidableListener
     @Override
     public void update(double extrp)
     {
-        final double side = model.getInput().getHorizontalDirection();
+        final double side = input.getHorizontalDirection();
         movement.setDestination(side * 3, 0);
         if (movement.getDirectionHorizontal() != 0)
         {
@@ -101,15 +103,18 @@ class StateJump extends StateAbstract implements TileCollidableListener
     }
 
     @Override
-    public void notifyTileCollided(Tile tile, CollisionCategory category)
+    public void notifyTileCollided(CollisionResult result, CollisionCategory category)
     {
-        if (Axis.Y == category.getAxis())
+        if (Axis.X == category.getAxis())
         {
-            jump.setDirection(DirectionNone.INSTANCE);
-            body.resetGravity();
+            tileCollidable.apply(result);
+        }
+        else if (Axis.Y == category.getAxis())
+        {
             if (transformable.getY() < transformable.getOldY())
             {
-                ground.set(true);
+                tileCollidable.apply(result);
+                collideX.set(true);
             }
         }
     }

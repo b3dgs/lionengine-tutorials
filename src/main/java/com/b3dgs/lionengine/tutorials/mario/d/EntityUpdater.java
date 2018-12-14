@@ -19,8 +19,6 @@ package com.b3dgs.lionengine.tutorials.mario.d;
 
 import com.b3dgs.lionengine.Mirror;
 import com.b3dgs.lionengine.game.DirectionNone;
-import com.b3dgs.lionengine.game.FeatureProvider;
-import com.b3dgs.lionengine.game.feature.Camera;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
 import com.b3dgs.lionengine.game.feature.FeatureModel;
 import com.b3dgs.lionengine.game.feature.Mirrorable;
@@ -32,24 +30,18 @@ import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
 import com.b3dgs.lionengine.game.feature.state.State;
 import com.b3dgs.lionengine.game.feature.state.StateHandler;
-import com.b3dgs.lionengine.game.feature.tile.Tile;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
 
 /**
  * Entity updating implementation.
  */
-class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableListener
+class EntityUpdater extends FeatureModel implements Refreshable
 {
-    private static final int GROUND = 32;
+    private static final int GROUND = 31;
 
     /** Entity configurer. */
     protected final Setup setup;
-
-    private final Camera camera;
 
     @FeatureGet private StateHandler handler;
     @FeatureGet private EntityModel model;
@@ -70,15 +62,6 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
         super();
 
         this.setup = setup;
-        camera = services.get(Camera.class);
-    }
-
-    @Override
-    public void prepare(FeatureProvider provider)
-    {
-        super.prepare(provider);
-
-        handler.changeState(StateIdle.class);
     }
 
     /**
@@ -115,7 +98,7 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
         body.resetGravity();
         collidable.setEnabled(true);
         tileCollidable.setEnabled(true);
-        handler.changeState(StateIdle.class);
+        changeState(StateIdle.class);
     }
 
     /**
@@ -132,25 +115,15 @@ class EntityUpdater extends FeatureModel implements Refreshable, TileCollidableL
     public void update(double extrp)
     {
         handler.update(extrp);
-        mirrorable.update(extrp);
-
         model.getMovement().update(extrp);
         model.getJump().update(extrp);
-        body.update(extrp);
+        transformable.moveLocation(extrp, body, model.getMovement(), model.getJump());
         tileCollidable.update(extrp);
+        handler.postUpdate();
+        mirrorable.update(extrp);
 
         final SpriteAnimated surface = model.getSurface();
         surface.setMirror(mirrorable.getMirror());
         surface.update(extrp);
-        surface.setLocation(camera, transformable);
-    }
-
-    @Override
-    public void notifyTileCollided(Tile tile, CollisionCategory category)
-    {
-        if (Axis.Y == category.getAxis() && transformable.getY() < transformable.getOldY())
-        {
-            body.resetGravity();
-        }
     }
 }

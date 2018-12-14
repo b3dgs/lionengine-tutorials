@@ -17,17 +17,13 @@
  */
 package com.b3dgs.lionengine.tutorials.mario.d;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
+import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.state.StateAbstract;
-import com.b3dgs.lionengine.game.feature.state.StateChecker;
-import com.b3dgs.lionengine.game.feature.tile.Tile;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
+import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionResult;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
 
@@ -36,13 +32,10 @@ import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListen
  */
 class StateIdle extends StateAbstract implements TileCollidableListener
 {
-    private final AtomicBoolean canJump = new AtomicBoolean(false);
-    private final Transformable transformable;
     private final TileCollidable tileCollidable;
     private final Animator animator;
     private final Animation animation;
     private final Force movement;
-    private final Force jump;
 
     /**
      * Create the state.
@@ -55,39 +48,19 @@ class StateIdle extends StateAbstract implements TileCollidableListener
         super();
 
         this.animation = animation;
-        transformable = model.getFeature(Transformable.class);
         tileCollidable = model.getFeature(TileCollidable.class);
         animator = model.getSurface();
         movement = model.getMovement();
-        jump = model.getJump();
 
-        addTransition(StateIdle.class, () -> model.getInput().getHorizontalDirection() != 0);
         addTransition(StateWalk.class, () -> model.getInput().getHorizontalDirection() != 0);
-        addTransition(StateJump.class, new StateChecker()
-        {
-            @Override
-            public boolean getAsBoolean()
-            {
-                return model.getInput().getVerticalDirection() > 0 && canJump.get();
-            }
-
-            @Override
-            public void exit()
-            {
-                Sfx.JUMP.play();
-                jump.setDirection(0.0, 8.0);
-                canJump.set(false);
-            }
-        });
+        addTransition(StateJump.class, () -> model.getInput().getVerticalDirection() > 0);
     }
 
     @Override
     public void enter()
     {
         tileCollidable.addListener(this);
-        movement.setDestination(0.0, 0.0);
-        movement.setVelocity(0.3);
-        movement.setSensibility(0.01);
+        movement.setDirection(DirectionNone.INSTANCE);
         animator.play(animation);
     }
 
@@ -100,15 +73,12 @@ class StateIdle extends StateAbstract implements TileCollidableListener
     @Override
     public void update(double extrp)
     {
-        // Nothing to do
+        movement.setDestination(0.0, 0.0);
     }
 
     @Override
-    public void notifyTileCollided(Tile tile, CollisionCategory category)
+    public void notifyTileCollided(CollisionResult result, CollisionCategory category)
     {
-        if (Axis.Y == category.getAxis() && transformable.getY() < transformable.getOldY())
-        {
-            canJump.set(true);
-        }
+        tileCollidable.apply(result);
     }
 }
