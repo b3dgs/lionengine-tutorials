@@ -20,7 +20,6 @@ package com.b3dgs.lionengine.tutorials.mario.d;
 import com.b3dgs.lionengine.game.FeatureProvider;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
 import com.b3dgs.lionengine.game.feature.FeatureInterface;
-import com.b3dgs.lionengine.game.feature.Refreshable;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.Transformable;
@@ -38,8 +37,7 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
  * Goomba specific implementation.
  */
 @FeatureInterface
-class GoombaUpdater extends EntityUpdater
-                    implements Refreshable, InputDeviceDirectional, CollidableListener, TileCollidableListener
+class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, CollidableListener, TileCollidableListener
 {
     private static final double SPEED_X = 0.25;
 
