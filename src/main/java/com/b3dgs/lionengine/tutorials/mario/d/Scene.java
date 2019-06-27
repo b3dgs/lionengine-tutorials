@@ -74,7 +74,7 @@ class Scene extends SequenceGame
      */
     public Scene(Context context)
     {
-        super(context, NATIVE, services -> new World(services));
+        super(context, NATIVE, World::new);
 
         getInputDevice(Keyboard.class).addActionPressed(KeyboardAwt.ESCAPE, this::end);
     }
