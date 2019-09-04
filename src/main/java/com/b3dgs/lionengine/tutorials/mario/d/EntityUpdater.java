@@ -58,7 +58,7 @@ class EntityUpdater extends FeatureModel implements Refreshable
      */
     public EntityUpdater(Services services, Setup setup)
     {
-        super();
+        super(services, setup);
 
         this.setup = setup;
     }

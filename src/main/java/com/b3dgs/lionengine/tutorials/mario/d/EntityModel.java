@@ -57,7 +57,7 @@ class EntityModel extends FeatureModel
      */
     public EntityModel(Services services, Setup setup)
     {
-        super();
+        super(services, setup);
 
         source = services.get(SourceResolutionProvider.class);
 

@@ -18,7 +18,6 @@ package com.b3dgs.lionengine.tutorials.mario.d;
 
 import com.b3dgs.lionengine.Animation;
 import com.b3dgs.lionengine.Animator;
-import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.Force;
 import com.b3dgs.lionengine.game.feature.state.StateAbstract;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
@@ -59,7 +58,6 @@ class StateIdle extends StateAbstract implements TileCollidableListener
     public void enter()
     {
         tileCollidable.addListener(this);
-        movement.setDirection(DirectionNone.INSTANCE);
         animator.play(animation);
     }
 

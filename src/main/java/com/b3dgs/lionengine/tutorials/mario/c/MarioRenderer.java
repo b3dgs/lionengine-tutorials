@@ -20,6 +20,8 @@ import com.b3dgs.lionengine.game.feature.Displayable;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
 import com.b3dgs.lionengine.game.feature.FeatureInterface;
 import com.b3dgs.lionengine.game.feature.FeatureModel;
+import com.b3dgs.lionengine.game.feature.Services;
+import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.graphic.Graphic;
 
 /**
@@ -28,6 +30,17 @@ import com.b3dgs.lionengine.graphic.Graphic;
 @FeatureInterface
 class MarioRenderer extends FeatureModel implements Displayable
 {
+    /**
+     * Constructor.
+     * 
+     * @param services The services reference.
+     * @param setup The setup reference.
+     */
+    public MarioRenderer(Services services, Setup setup)
+    {
+        super(services, setup);
+    }
+
     @FeatureGet private MarioModel model;
 
     @Override

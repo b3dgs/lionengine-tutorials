@@ -56,7 +56,7 @@ class MarioModel extends FeatureModel
      */
     public MarioModel(Services services, Setup setup)
     {
-        super();
+        super(services, setup);
 
         source = services.get(SourceResolutionProvider.class);
         keyboard = services.get(InputDeviceDirectional.class);

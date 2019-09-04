@@ -57,7 +57,7 @@ class MarioUpdater extends FeatureModel implements Refreshable
      */
     public MarioUpdater(Services services, Setup setup)
     {
-        super();
+        super(services, setup);
 
         camera = services.get(Camera.class);
     }

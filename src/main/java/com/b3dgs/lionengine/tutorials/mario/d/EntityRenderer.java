@@ -46,7 +46,7 @@ class EntityRenderer extends FeatureModel implements Displayable
      */
     public EntityRenderer(Services services, Setup setup)
     {
-        super();
+        super(services, setup);
 
         camera = services.get(Camera.class);
     }
