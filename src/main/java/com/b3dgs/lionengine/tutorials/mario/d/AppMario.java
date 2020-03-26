@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
+ * Copyright (C) 2013-2020 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 package com.b3dgs.lionengine.tutorials.mario.d;
 
 import com.b3dgs.lionengine.Config;
+import com.b3dgs.lionengine.LionEngineException;
 import com.b3dgs.lionengine.Version;
 import com.b3dgs.lionengine.audio.AudioFactory;
 import com.b3dgs.lionengine.audio.adlmidi.AdlMidiFormat;
@@ -27,7 +28,7 @@ import com.b3dgs.lionengine.graphic.engine.Loader;
 /**
  * Program starts here.
  */
-public class AppMario
+public final class AppMario
 {
     /** Application name. */
     private static final String NAME = "Mario";
@@ -39,11 +40,19 @@ public class AppMario
      * 
      * @param args The arguments.
      */
-    public static void main(String[] args)
+    public static void main(String[] args) // CHECKSTYLE IGNORE LINE: TrailingComment|UncommentedMain
     {
         EngineAwt.start(NAME, VERSION, AppMario.class);
         AudioFactory.addFormat(new WavFormat());
         AudioFactory.addFormat(new AdlMidiFormat());
         Loader.start(Config.windowed(Scene.NATIVE.get2x()), Scene.class);
+    }
+
+    /**
+     * Private constructor.
+     */
+    private AppMario()
+    {
+        throw new LionEngineException(LionEngineException.ERROR_PRIVATE_CONSTRUCTOR);
     }
 }

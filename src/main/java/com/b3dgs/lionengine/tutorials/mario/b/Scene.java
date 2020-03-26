@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
+ * Copyright (C) 2013-2020 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,8 @@ class Scene extends SequenceGame
 {
     /** Native resolution. */
     public static final Resolution NATIVE = new Resolution(320, 240, 60);
-    private static final Media LEVEL = Medias.create("map", "level.lvl");
+    private static final String FOLDER_MAP = "map";
+    private static final Media LEVEL = Medias.create(FOLDER_MAP, "level.lvl");
 
     /**
      * Import and save the level.
@@ -49,7 +50,7 @@ class Scene extends SequenceGame
     {
         final Services services = new Services();
         final MapTile map = services.create(MapTileGame.class);
-        map.create(Medias.create("map", "level.png"));
+        map.create(Medias.create(FOLDER_MAP, "level.png"));
 
         final MapTilePersister mapPersister = map.addFeatureAndGet(new MapTilePersisterModel(services));
         try (FileWriting output = new FileWriting(LEVEL))
@@ -67,7 +68,7 @@ class Scene extends SequenceGame
      * 
      * @param context The context reference.
      */
-    public Scene(Context context)
+    Scene(Context context)
     {
         super(context, NATIVE, World::new);
 

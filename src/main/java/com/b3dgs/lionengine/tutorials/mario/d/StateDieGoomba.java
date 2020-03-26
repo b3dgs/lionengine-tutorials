@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
+ * Copyright (C) 2013-2020 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ class StateDieGoomba extends StateAbstract
      * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateDieGoomba(EntityModel model, Animation animation)
+    StateDieGoomba(EntityModel model, Animation animation)
     {
         super();
 

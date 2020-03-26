@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
+ * Copyright (C) 2013-2020 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ class StateFall extends StateAbstract implements TileCollidableListener
      * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateFall(MarioModel model, Animation animation)
+    StateFall(MarioModel model, Animation animation)
     {
         super();
 
@@ -94,7 +94,7 @@ class StateFall extends StateAbstract implements TileCollidableListener
         body.update(extrp);
 
         final double side = input.getHorizontalDirection();
-        movement.setDestination(side * 3, 0);
+        movement.setDestination(side * MarioModel.SPEED_X, 0);
         if (movement.getDirectionHorizontal() != 0)
         {
             mirrorable.mirror(movement.getDirectionHorizontal() < 0 ? Mirror.HORIZONTAL : Mirror.NONE);

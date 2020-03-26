@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
+ * Copyright (C) 2013-2020 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,8 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
 @FeatureInterface
 class EntityModel extends FeatureModel
 {
+    /** Horizontal speed. */
+    static final double SPEED_X = 3.0;
     private static final double GRAVITY = 10.0;
 
     private final Force movement = new Force();
@@ -55,7 +57,7 @@ class EntityModel extends FeatureModel
      * @param services The services reference.
      * @param setup The setup reference.
      */
-    public EntityModel(Services services, Setup setup)
+    EntityModel(Services services, Setup setup)
     {
         super(services, setup);
 

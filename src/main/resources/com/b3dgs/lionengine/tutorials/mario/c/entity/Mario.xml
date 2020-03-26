@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<lionengine:featurable xmlns:lionengine="http://lionengine.b3dgs.com">
-    <lionengine:feature>com.b3dgs.lionengine.game.feature.MirrorableModel</lionengine:feature>
-    <lionengine:feature>com.b3dgs.lionengine.game.feature.TransformableModel</lionengine:feature>
-    <lionengine:feature>com.b3dgs.lionengine.game.feature.LayerableModel</lionengine:feature>
-    <lionengine:feature>com.b3dgs.lionengine.game.feature.body.BodyModel</lionengine:feature>
-    <lionengine:feature>com.b3dgs.lionengine.game.feature.collidable.CollidableModel</lionengine:feature>
-    <lionengine:feature>com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableModel</lionengine:feature>
-    <lionengine:feature>com.b3dgs.lionengine.game.feature.state.StateHandler</lionengine:feature>
-    <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.c.MarioModel</lionengine:feature>
-    <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.c.MarioUpdater</lionengine:feature>
-    <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.c.MarioRenderer</lionengine:feature>
-    <lionengine:layerable layerRefresh="1" layerDisplay="1"/>
+<lionengine:featurable xmlns:lionengine="http://lionengine.b3dgs.com/xsd/9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://lionengine.b3dgs.com/xsd/9 http://lionengine.b3dgs.com/xsd/9/featurable.xsd">
+    <lionengine:features>
+        <lionengine:feature>com.b3dgs.lionengine.game.feature.MirrorableModel</lionengine:feature>
+        <lionengine:feature>com.b3dgs.lionengine.game.feature.TransformableModel</lionengine:feature>
+        <lionengine:feature>com.b3dgs.lionengine.game.feature.LayerableModel</lionengine:feature>
+        <lionengine:feature>com.b3dgs.lionengine.game.feature.body.BodyModel</lionengine:feature>
+        <lionengine:feature>com.b3dgs.lionengine.game.feature.collidable.CollidableModel</lionengine:feature>
+        <lionengine:feature>com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableModel</lionengine:feature>
+        <lionengine:feature>com.b3dgs.lionengine.game.feature.state.StateHandler</lionengine:feature>
+        <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.c.MarioModel</lionengine:feature>
+        <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.c.MarioUpdater</lionengine:feature>
+        <lionengine:feature>com.b3dgs.lionengine.tutorials.mario.c.MarioRenderer</lionengine:feature>
+    </lionengine:features>
     <lionengine:surface image="Mario.png"/>
     <lionengine:frames horizontal="7" vertical="1"/>
     <lionengine:size height="16" width="16"/>
-    <lionengine:category axis="Y" name="leg_l" x="6" y="0">
-        <lionengine:group>block</lionengine:group>
-    </lionengine:category>
-    <lionengine:category axis="Y" name="leg_r" x="-6" y="0">
-        <lionengine:group>block</lionengine:group>
-    </lionengine:category>
-    <lionengine:category axis="X" name="knee_l" x="7" y="1">
-        <lionengine:group>block</lionengine:group>
-    </lionengine:category>
-    <lionengine:category axis="X" name="knee_r" x="-7" y="1">
-        <lionengine:group>block</lionengine:group>
-    </lionengine:category>
-    <lionengine:animation end="7" name="StateTurn" repeat="false" reversed="false" speed="0.125" start="7"/>
-    <lionengine:animation end="1" name="StateIdle" repeat="false" reversed="false" speed="0.125" start="1"/>
-    <lionengine:animation end="6" name="StateWalk" repeat="true" reversed="false" speed="0.25" start="4"/>
-    <lionengine:animation end="2" name="StateDeath" repeat="false" reversed="false" speed="0.25" start="2"/>
-    <lionengine:animation end="3" name="StateJump" repeat="false" reversed="false" speed="0.25" start="3"/>
-    <lionengine:animation end="3" name="StateFall" repeat="false" reversed="false" speed="0.25" start="3"/>
-    <lionengine:collision height="15" mirror="false" name="default" offsetX="0" offsetY="0" width="12"/>
+    <lionengine:animations>
+        <lionengine:animation end="7" name="StateTurn" repeat="false" reversed="false" speed="0.125" start="7"/>
+        <lionengine:animation end="1" name="StateIdle" repeat="false" reversed="false" speed="0.125" start="1"/>
+        <lionengine:animation end="6" name="StateWalk" repeat="true" reversed="false" speed="0.25" start="4"/>
+        <lionengine:animation end="2" name="StateDeath" repeat="false" reversed="false" speed="0.25" start="2"/>
+        <lionengine:animation end="3" name="StateJump" repeat="false" reversed="false" speed="0.25" start="3"/>
+        <lionengine:animation end="3" name="StateFall" repeat="false" reversed="false" speed="0.25" start="3"/>
+    </lionengine:animations>
+    <lionengine:collisions>
+        <lionengine:collision height="15" mirror="false" name="default" offsetX="0" offsetY="0" width="12"/>
+    </lionengine:collisions>
+    <lionengine:categories>
+        <lionengine:category axis="Y" name="leg_l" x="6" y="0">
+            <lionengine:group>block</lionengine:group>
+        </lionengine:category>
+        <lionengine:category axis="Y" name="leg_r" x="-6" y="0">
+            <lionengine:group>block</lionengine:group>
+        </lionengine:category>
+        <lionengine:category axis="X" name="knee_l" x="7" y="1">
+            <lionengine:group>block</lionengine:group>
+        </lionengine:category>
+        <lionengine:category axis="X" name="knee_r" x="-7" y="1">
+            <lionengine:group>block</lionengine:group>
+        </lionengine:category>
+    </lionengine:categories>
+    <lionengine:layerable layerRefresh="1" layerDisplay="1"/>
 </lionengine:featurable>

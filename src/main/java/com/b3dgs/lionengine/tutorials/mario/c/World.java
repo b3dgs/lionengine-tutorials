@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
+ * Copyright (C) 2013-2020 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ import com.b3dgs.lionengine.io.InputDeviceDirectional;
  */
 class World extends WorldGame
 {
+    static final String FOLDER_MAP = "map";
     private static final Media MARIO = Medias.create("entity", "Mario.xml");
     private static final ColorRgba BACKGROUND_COLOR = new ColorRgba(107, 136, 255);
 
@@ -61,7 +62,7 @@ class World extends WorldGame
      * 
      * @param services The services reference.
      */
-    public World(Services services)
+    World(Services services)
     {
         super(services);
 
@@ -91,8 +92,9 @@ class World extends WorldGame
         handler.add(map);
 
         mapPersister.load(file);
-        mapGroup.loadGroups(Medias.create("map", "groups.xml"));
-        mapCollision.loadCollisions(Medias.create("map", "formulas.xml"), Medias.create("map", "collisions.xml"));
+        mapGroup.loadGroups(Medias.create(FOLDER_MAP, "groups.xml"));
+        mapCollision.loadCollisions(Medias.create(FOLDER_MAP, "formulas.xml"),
+                                    Medias.create(FOLDER_MAP, "collisions.xml"));
 
         final MapTileCollisionRenderer mapCollisionRenderer;
         mapCollisionRenderer = map.addFeatureAndGet(new MapTileCollisionRendererModel(services));

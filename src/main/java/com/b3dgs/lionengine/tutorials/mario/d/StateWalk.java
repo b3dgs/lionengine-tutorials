@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
+ * Copyright (C) 2013-2020 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ class StateWalk extends StateAbstract implements TileCollidableListener
      * @param model The model reference.
      * @param animation The associated animation.
      */
-    public StateWalk(EntityModel model, Animation animation)
+    StateWalk(EntityModel model, Animation animation)
     {
         super();
 
@@ -105,7 +105,7 @@ class StateWalk extends StateAbstract implements TileCollidableListener
         }
 
         final double side = input.getHorizontalDirection();
-        movement.setDestination(side * 3, 0);
+        movement.setDestination(side * EntityModel.SPEED_X, 0);
         animator.setAnimSpeed(Math.abs(movement.getDirectionHorizontal()) / 12.0);
 
         if (side < 0 && movement.getDirectionHorizontal() < 0)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
+ * Copyright (C) 2013-2020 Byron 3D Games Studio (www.b3dgs.com) Pierre-Alexandre (contact@b3dgs.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ class EntityRenderer extends FeatureModel implements Displayable
      * @param services The services reference.
      * @param setup The setup reference.
      */
-    public EntityRenderer(Services services, Setup setup)
+    EntityRenderer(Services services, Setup setup)
     {
         super(services, setup);
 
