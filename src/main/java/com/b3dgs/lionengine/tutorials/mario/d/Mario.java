@@ -16,30 +16,40 @@
  */
 package com.b3dgs.lionengine.tutorials.mario.d;
 
+import com.b3dgs.lionengine.Tick;
 import com.b3dgs.lionengine.game.FeatureProvider;
+import com.b3dgs.lionengine.game.feature.Camera;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
 import com.b3dgs.lionengine.game.feature.FeatureInterface;
+import com.b3dgs.lionengine.game.feature.FeatureModel;
+import com.b3dgs.lionengine.game.feature.Routine;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.Transformable;
+import com.b3dgs.lionengine.game.feature.body.Body;
 import com.b3dgs.lionengine.game.feature.collidable.Collidable;
 import com.b3dgs.lionengine.game.feature.collidable.CollidableListener;
 import com.b3dgs.lionengine.game.feature.collidable.Collision;
+import com.b3dgs.lionengine.game.feature.state.StateHandler;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
-import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * Mario specific implementation.
  */
 @FeatureInterface
-class MarioUpdater extends EntityUpdater implements CollidableListener
+class Mario extends FeatureModel implements Routine, CollidableListener
 {
-    private final Services services;
+    private static final long DEAD_TICK = 30L;
+
+    private final Tick deadTick = new Tick();
+    private final Camera camera = services.get(Camera.class);
 
     @FeatureGet private EntityModel model;
+    @FeatureGet private Body body;
     @FeatureGet private Transformable transformable;
     @FeatureGet private TileCollidable tileCollidable;
     @FeatureGet private Collidable collidable;
+    @FeatureGet private StateHandler state;
 
     /**
      * Constructor.
@@ -47,11 +57,35 @@ class MarioUpdater extends EntityUpdater implements CollidableListener
      * @param setup The setup reference.
      * @param services The services reference.
      */
-    MarioUpdater(Services services, Setup setup)
+    Mario(Services services, Setup setup)
     {
         super(services, setup);
+    }
 
-        this.services = services;
+    /**
+     * Force jump.
+     * 
+     * @param height The jump height.
+     */
+    public void jump(int height)
+    {
+        model.getJump().zero();
+        model.getJump().setDirection(0.0, height);
+    }
+
+    /**
+     * Respawn the mario.
+     */
+    public void respawn()
+    {
+        state.changeState(StateIdle.class);
+        transformable.teleport(160, World.GROUND);
+        camera.resetInterval(transformable);
+        model.getJump().zero();
+        body.resetGravity();
+        model.getLife().fill();
+        collidable.setEnabled(true);
+        tileCollidable.setEnabled(true);
     }
 
     @Override
@@ -59,32 +93,46 @@ class MarioUpdater extends EntityUpdater implements CollidableListener
     {
         super.prepare(provider);
 
-        model.setInput(services.get(InputDeviceDirectional.class));
-
-        collidable.setGroup(Integer.valueOf(0));
-        collidable.addAccept(Integer.valueOf(1));
-        respawn(160);
+        state.addListener((from, to) ->
+        {
+            if (StateFall.class != from && StateJump.class == to)
+            {
+                Sfx.JUMP.play();
+            }
+        });
+        respawn();
     }
 
     @Override
     public void update(double extrp)
     {
+        deadTick.update(extrp);
+        if (deadTick.elapsed(DEAD_TICK))
+        {
+            tileCollidable.setEnabled(false);
+            jump(20);
+            deadTick.stop();
+        }
+
         if (transformable.getY() < 0)
         {
-            respawn(160);
+            respawn();
         }
-        super.update(extrp);
     }
 
     @Override
     public void notifyCollided(Collidable other, Collision with, Collision by)
     {
-        if (transformable.getY() >= transformable.getOldY()
-            && !other.getFeature(GoombaUpdater.class).isState(StateDieGoomba.class))
+        final Transformable collider = other.getFeature(Transformable.class);
+        if (Double.compare(transformable.getY(), transformable.getOldY()) >= 0)
         {
             collidable.setEnabled(false);
-            tileCollidable.setEnabled(false);
-            changeState(StateDieMario.class);
+            model.getLife().decrease(1);
+            deadTick.start();
+        }
+        else if (transformable.getY() > collider.getY())
+        {
+            jump(10);
         }
     }
 }

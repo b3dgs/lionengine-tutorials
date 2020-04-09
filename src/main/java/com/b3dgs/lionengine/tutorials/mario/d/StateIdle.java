@@ -17,22 +17,15 @@
 package com.b3dgs.lionengine.tutorials.mario.d;
 
 import com.b3dgs.lionengine.Animation;
-import com.b3dgs.lionengine.Animator;
+import com.b3dgs.lionengine.UtilMath;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.state.StateAbstract;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionResult;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
+import com.b3dgs.lionengine.helper.StateHelper;
 
 /**
  * Idle state implementation.
  */
-class StateIdle extends StateAbstract implements TileCollidableListener
+class StateIdle extends StateHelper<EntityModel>
 {
-    private final TileCollidable tileCollidable;
-    private final Animator animator;
-    private final Animation animation;
     private final Force movement;
 
     /**
@@ -43,39 +36,24 @@ class StateIdle extends StateAbstract implements TileCollidableListener
      */
     StateIdle(EntityModel model, Animation animation)
     {
-        super();
+        super(model, animation);
 
-        this.animation = animation;
-        tileCollidable = model.getFeature(TileCollidable.class);
-        animator = model.getSurface();
         movement = model.getMovement();
 
-        addTransition(StateWalk.class, () -> model.getInput().getHorizontalDirection() != 0);
-        addTransition(StateJump.class, () -> model.getInput().getVerticalDirection() > 0);
-    }
-
-    @Override
-    public void enter()
-    {
-        tileCollidable.addListener(this);
-        animator.play(animation);
-    }
-
-    @Override
-    public void exit()
-    {
-        tileCollidable.removeListener(this);
+        addTransition(StateWalk.class,
+                      () -> !isCollideX()
+                            && isGoHorizontal()
+                            && !UtilMath.isBetween(movement.getDirectionHorizontal(), -0.1, 0.1));
+        addTransition(StateJump.class, () -> isGoUpOnce());
+        addTransition(StateDie.class, () -> model.getLife().isEmpty());
     }
 
     @Override
     public void update(double extrp)
     {
-        movement.setDestination(0.0, 0.0);
-    }
+        super.update(extrp);
 
-    @Override
-    public void notifyTileCollided(CollisionResult result, CollisionCategory category)
-    {
-        tileCollidable.apply(result);
+        movement.setDestination(input.getHorizontalDirection() * EntityModel.SPEED_X, 0.0);
+        animatable.setAnimSpeed(Math.abs(movement.getDirectionHorizontal()) / 12.0);
     }
 }

@@ -20,41 +20,23 @@ import java.io.IOException;
 
 import com.b3dgs.lionengine.Media;
 import com.b3dgs.lionengine.Medias;
-import com.b3dgs.lionengine.game.feature.CameraTracker;
 import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.feature.Services;
-import com.b3dgs.lionengine.game.feature.WorldGame;
-import com.b3dgs.lionengine.game.feature.collidable.ComponentCollision;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTile;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTileGame;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTileGroup;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTileGroupModel;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.MapTileCollision;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.MapTileCollisionModel;
-import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersister;
-import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersisterModel;
-import com.b3dgs.lionengine.game.feature.tile.map.viewer.MapTileViewerModel;
 import com.b3dgs.lionengine.graphic.ColorRgba;
 import com.b3dgs.lionengine.graphic.Graphic;
+import com.b3dgs.lionengine.helper.WorldHelper;
 import com.b3dgs.lionengine.io.FileReading;
-import com.b3dgs.lionengine.io.FileWriting;
-import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * World implementation.
  */
-class World extends WorldGame
+class World extends WorldHelper
 {
-    static final String FOLDER_MAP = "map";
-    static final String FOLDER_ENTITY = "entity";
+    /** Ground height. */
+    static final int GROUND = 32;
     private static final ColorRgba BACKGROUND_COLOR = new ColorRgba(107, 136, 255);
-    private static final Media MARIO = Medias.create(FOLDER_ENTITY, "Mario.xml");
-    private static final Media GOOMBA = Medias.create(FOLDER_ENTITY, "Goomba.xml");
-
-    private final MapTile map = services.create(MapTileGame.class);
-    private final MapTilePersister mapPersister = map.addFeatureAndGet(new MapTilePersisterModel(services));
-    private final MapTileGroup mapGroup = map.addFeatureAndGet(new MapTileGroupModel());
-    private final MapTileCollision mapCollision = map.addFeatureAndGet(new MapTileCollisionModel(services));
+    private static final Media MARIO = Medias.create("entity", "Mario.xml");
+    private static final Media GOOMBA = Medias.create("entity", "Goomba.xml");
 
     /**
      * Create world.
@@ -65,10 +47,6 @@ class World extends WorldGame
     {
         super(services);
 
-        services.add(getInputDevice(InputDeviceDirectional.class));
-
-        map.addFeature(new MapTileViewerModel(services));
-        handler.addComponent(new ComponentCollision());
         camera.setIntervals(16, 0);
     }
 
@@ -76,37 +54,22 @@ class World extends WorldGame
     public void render(Graphic g)
     {
         fill(g, BACKGROUND_COLOR);
-        super.render(g);
-    }
 
-    @Override
-    protected void saving(FileWriting file) throws IOException
-    {
-        mapPersister.save(file);
+        super.render(g);
     }
 
     @Override
     protected void loading(FileReading file) throws IOException
     {
-        handler.add(map);
-
-        mapPersister.load(file);
-        mapGroup.loadGroups(Medias.create(FOLDER_MAP, "groups.xml"));
-        mapCollision.loadCollisions(Medias.create(FOLDER_MAP, "formulas.xml"),
-                                    Medias.create(FOLDER_MAP, "collisions.xml"));
+        super.loading(file);
 
         final Featurable mario = factory.create(MARIO);
         handler.add(mario);
-
-        final CameraTracker tracker = new CameraTracker(services);
-        camera.setLimits(map);
         tracker.track(mario);
-        handler.add(tracker);
 
         for (int i = 0; i < 5; i++)
         {
-            final Featurable goomba = factory.create(GOOMBA);
-            goomba.getFeature(GoombaUpdater.class).respawn(500 + i * 50);
+            final Featurable goomba = spawn(GOOMBA, 500 + i * 50, GROUND);
             handler.add(goomba);
         }
     }

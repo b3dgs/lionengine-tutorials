@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.b3dgs.lionengine</groupId>
@@ -11,6 +11,7 @@
     <packaging>jar</packaging>
     <name>LionEngine Tutorials</name>
     <properties>
+        <jna.version>4.5.1</jna.version>
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
     <dependencies>
@@ -40,9 +41,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.b3dgs.lionengine</groupId>
+            <artifactId>lionengine-helper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
-            <version>4.5.1</version>
+            <version>${jna.version}</version>
         </dependency>
     </dependencies>
     <build>

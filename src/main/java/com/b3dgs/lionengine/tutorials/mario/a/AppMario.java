@@ -27,11 +27,6 @@ import com.b3dgs.lionengine.graphic.engine.Loader;
  */
 public final class AppMario
 {
-    /** Application name. */
-    private static final String NAME = "Mario";
-    /** Application version. */
-    private static final Version VERSION = Version.create(1, 0, 0);
-
     /**
      * Main function.
      * 
@@ -39,7 +34,7 @@ public final class AppMario
      */
     public static void main(String[] args) // CHECKSTYLE IGNORE LINE: TrailingComment|UncommentedMain
     {
-        EngineAwt.start(NAME, VERSION, AppMario.class);
+        EngineAwt.start(AppMario.class.getSimpleName(), Version.create(1, 0, 0), AppMario.class);
         Loader.start(Config.windowed(Scene.NATIVE.get2x()), Scene.class);
     }
 

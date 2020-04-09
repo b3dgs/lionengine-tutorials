@@ -16,9 +16,14 @@
  */
 package com.b3dgs.lionengine.tutorials.mario.d;
 
+import com.b3dgs.lionengine.Tick;
 import com.b3dgs.lionengine.game.FeatureProvider;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
 import com.b3dgs.lionengine.game.feature.FeatureInterface;
+import com.b3dgs.lionengine.game.feature.FeatureModel;
+import com.b3dgs.lionengine.game.feature.Identifiable;
+import com.b3dgs.lionengine.game.feature.Recyclable;
+import com.b3dgs.lionengine.game.feature.Routine;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
 import com.b3dgs.lionengine.game.feature.Transformable;
@@ -28,24 +33,25 @@ import com.b3dgs.lionengine.game.feature.collidable.Collision;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.Axis;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionCategory;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.CollisionResult;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidable;
 import com.b3dgs.lionengine.game.feature.tile.map.collision.TileCollidableListener;
-import com.b3dgs.lionengine.io.InputDeviceDirectional;
+import com.b3dgs.lionengine.io.InputDeviceControlVoid;
 
 /**
  * Goomba specific implementation.
  */
 @FeatureInterface
-class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, CollidableListener, TileCollidableListener
+class Patrol extends FeatureModel implements Routine, CollidableListener, TileCollidableListener, Recyclable
 {
     private static final double SPEED_X = 0.25;
+    private static final long DEAD_TICK = 30L;
+
+    private final Tick deadTick = new Tick();
 
     @FeatureGet private EntityModel model;
     @FeatureGet private Transformable transformable;
-    @FeatureGet private TileCollidable tileCollidable;
     @FeatureGet private Collidable collidable;
+    @FeatureGet private Identifiable identifiable;
 
-    /** Side movement. */
     private double side = SPEED_X;
 
     /**
@@ -54,7 +60,7 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
      * @param services The services reference.
      * @param setup The setup reference.
      */
-    GoombaUpdater(Services services, Setup setup)
+    Patrol(Services services, Setup setup)
     {
         super(services, setup);
     }
@@ -64,69 +70,24 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
     {
         super.prepare(provider);
 
-        model.setInput(this);
-        collidable.setGroup(Integer.valueOf(1));
-        collidable.addAccept(Integer.valueOf(0));
+        model.setInput(new InputDeviceControlVoid()
+        {
+            @Override
+            public double getHorizontalDirection()
+            {
+                return side;
+            }
+        });
     }
 
     @Override
-    public void setHorizontalControlPositive(Integer code)
+    public void update(double extrp)
     {
-        // Nothing to do
-    }
-
-    @Override
-    public void setHorizontalControlNegative(Integer code)
-    {
-        // Nothing to do
-    }
-
-    @Override
-    public void setVerticalControlPositive(Integer code)
-    {
-        // Nothing to do
-    }
-
-    @Override
-    public void setVerticalControlNegative(Integer code)
-    {
-        // Nothing to do
-    }
-
-    @Override
-    public Integer getHorizontalControlPositive()
-    {
-        return null;
-    }
-
-    @Override
-    public Integer getHorizontalControlNegative()
-    {
-        return null;
-    }
-
-    @Override
-    public Integer getVerticalControlPositive()
-    {
-        return null;
-    }
-
-    @Override
-    public Integer getVerticalControlNegative()
-    {
-        return null;
-    }
-
-    @Override
-    public double getHorizontalDirection()
-    {
-        return side;
-    }
-
-    @Override
-    public double getVerticalDirection()
-    {
-        return 0;
+        deadTick.update(extrp);
+        if (deadTick.elapsed(DEAD_TICK))
+        {
+            identifiable.destroy();
+        }
     }
 
     @Override
@@ -134,11 +95,11 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
     {
         if (Axis.X == category.getAxis())
         {
-            if (category.getName().contains("knee_l"))
+            if (category.getName().startsWith("right"))
             {
                 side = -SPEED_X;
             }
-            else if (category.getName().contains("knee_r"))
+            else if (category.getName().startsWith("left"))
             {
                 side = SPEED_X;
             }
@@ -152,10 +113,18 @@ class GoombaUpdater extends EntityUpdater implements InputDeviceDirectional, Col
         if (collider.getY() < collider.getOldY() && collider.getY() > transformable.getY())
         {
             collider.teleportY(transformable.getY() + transformable.getHeight());
-            other.getFeature(MarioUpdater.class).jump();
             collidable.setEnabled(false);
-            changeState(StateDieGoomba.class);
+            model.getLife().decrease(1);
             Sfx.CRUSH.play();
+            deadTick.start();
         }
+    }
+
+    @Override
+    public void recycle()
+    {
+        collidable.setEnabled(true);
+        model.getLife().fill();
+        deadTick.stop();
     }
 }

@@ -16,22 +16,16 @@
  */
 package com.b3dgs.lionengine.tutorials.mario.d;
 
-import com.b3dgs.lionengine.AnimState;
 import com.b3dgs.lionengine.Animation;
-import com.b3dgs.lionengine.Animator;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.feature.Identifiable;
-import com.b3dgs.lionengine.game.feature.state.StateAbstract;
+import com.b3dgs.lionengine.helper.StateHelper;
 
 /**
- * Goomba die state implementation.
+ * Die state implementation.
  */
-class StateDieGoomba extends StateAbstract
+class StateDie extends StateHelper<EntityModel>
 {
-    private final EntityModel model;
     private final Force movement;
-    private final Animator animator;
-    private final Animation animation;
 
     /**
      * Create the state.
@@ -39,29 +33,18 @@ class StateDieGoomba extends StateAbstract
      * @param model The model reference.
      * @param animation The associated animation.
      */
-    StateDieGoomba(EntityModel model, Animation animation)
+    StateDie(EntityModel model, Animation animation)
     {
-        super();
+        super(model, animation);
 
-        this.model = model;
-        this.animation = animation;
-        animator = model.getSurface();
         movement = model.getMovement();
     }
 
     @Override
     public void enter()
     {
-        animator.play(animation);
-        movement.setDestination(0.0, 0.0);
-    }
+        super.enter();
 
-    @Override
-    public void update(double extrp)
-    {
-        if (AnimState.FINISHED == animator.getAnimState())
-        {
-            model.getFeature(Identifiable.class).destroy();
-        }
+        movement.zero();
     }
 }

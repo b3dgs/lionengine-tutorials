@@ -16,38 +16,41 @@
  */
 package com.b3dgs.lionengine.tutorials.mario.c;
 
-import com.b3dgs.lionengine.Origin;
+import com.b3dgs.lionengine.Mirror;
+import com.b3dgs.lionengine.game.DirectionNone;
 import com.b3dgs.lionengine.game.FeatureProvider;
 import com.b3dgs.lionengine.game.Force;
-import com.b3dgs.lionengine.game.FramesConfig;
+import com.b3dgs.lionengine.game.feature.Camera;
 import com.b3dgs.lionengine.game.feature.FeatureGet;
 import com.b3dgs.lionengine.game.feature.FeatureInterface;
-import com.b3dgs.lionengine.game.feature.FeatureModel;
+import com.b3dgs.lionengine.game.feature.Mirrorable;
+import com.b3dgs.lionengine.game.feature.Routine;
 import com.b3dgs.lionengine.game.feature.Services;
 import com.b3dgs.lionengine.game.feature.Setup;
+import com.b3dgs.lionengine.game.feature.Transformable;
 import com.b3dgs.lionengine.game.feature.body.Body;
-import com.b3dgs.lionengine.graphic.drawable.Drawable;
-import com.b3dgs.lionengine.graphic.drawable.SpriteAnimated;
 import com.b3dgs.lionengine.graphic.engine.SourceResolutionProvider;
-import com.b3dgs.lionengine.io.InputDeviceDirectional;
+import com.b3dgs.lionengine.helper.EntityModelHelper;
 
 /**
- * Mario model implementation.
+ * Entity model implementation.
  */
 @FeatureInterface
-class MarioModel extends FeatureModel
+class EntityModel extends EntityModelHelper implements Routine
 {
     /** Horizontal speed. */
     static final double SPEED_X = 3.0;
     private static final double GRAVITY = 10.0;
+    private static final int GROUND = 32;
 
     private final Force movement = new Force();
     private final Force jump = new Force();
-    private final SpriteAnimated surface;
 
-    private final InputDeviceDirectional keyboard;
-    private final SourceResolutionProvider source;
+    private final SourceResolutionProvider source = services.get(SourceResolutionProvider.class);
+    private final Camera camera = services.get(Camera.class);
 
+    @FeatureGet private Transformable transformable;
+    @FeatureGet private Mirrorable mirrorable;
     @FeatureGet private Body body;
 
     /**
@@ -56,17 +59,9 @@ class MarioModel extends FeatureModel
      * @param services The services reference.
      * @param setup The setup reference.
      */
-    MarioModel(Services services, Setup setup)
+    EntityModel(Services services, Setup setup)
     {
         super(services, setup);
-
-        source = services.get(SourceResolutionProvider.class);
-        keyboard = services.get(InputDeviceDirectional.class);
-
-        final FramesConfig frames = FramesConfig.imports(setup);
-        surface = Drawable.loadSpriteAnimated(setup.getSurface(), frames.getHorizontal(), frames.getVertical());
-        surface.setOrigin(Origin.CENTER_BOTTOM);
-        surface.setFrameOffsets(0, -1);
     }
 
     @Override
@@ -82,6 +77,43 @@ class MarioModel extends FeatureModel
         body.setGravity(GRAVITY);
         body.setGravityMax(GRAVITY);
         body.setDesiredFps(source.getRate());
+
+        respawn();
+    }
+
+    @Override
+    public void update(double extrp)
+    {
+        movement.update(extrp);
+        jump.update(extrp);
+
+        transformable.moveLocation(extrp, body, movement, jump);
+
+        final double side = input.getHorizontalDirection();
+        if (side < 0 && movement.getDirectionHorizontal() < 0)
+        {
+            mirrorable.mirror(Mirror.HORIZONTAL);
+        }
+        else if (side > 0 && movement.getDirectionHorizontal() > 0)
+        {
+            mirrorable.mirror(Mirror.NONE);
+        }
+
+        if (transformable.getY() < 0)
+        {
+            respawn();
+        }
+    }
+
+    /**
+     * Respawn the mario.
+     */
+    public void respawn()
+    {
+        transformable.teleport(400, GROUND);
+        camera.resetInterval(transformable);
+        jump.setDirection(DirectionNone.INSTANCE);
+        body.resetGravity();
     }
 
     /**
@@ -102,25 +134,5 @@ class MarioModel extends FeatureModel
     public Force getJump()
     {
         return jump;
-    }
-
-    /**
-     * Get the surface representation.
-     * 
-     * @return The surface representation.
-     */
-    public SpriteAnimated getSurface()
-    {
-        return surface;
-    }
-
-    /**
-     * Get input.
-     * 
-     * @return The input.
-     */
-    public InputDeviceDirectional getInput()
-    {
-        return keyboard;
     }
 }

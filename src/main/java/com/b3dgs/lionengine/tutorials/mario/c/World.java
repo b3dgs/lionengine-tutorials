@@ -18,44 +18,20 @@ package com.b3dgs.lionengine.tutorials.mario.c;
 
 import java.io.IOException;
 
-import com.b3dgs.lionengine.Media;
 import com.b3dgs.lionengine.Medias;
-import com.b3dgs.lionengine.game.feature.CameraTracker;
 import com.b3dgs.lionengine.game.feature.Featurable;
 import com.b3dgs.lionengine.game.feature.Services;
-import com.b3dgs.lionengine.game.feature.WorldGame;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTile;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTileGame;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTileGroup;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTileGroupModel;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTileRendererModel;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.MapTileCollision;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.MapTileCollisionModel;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.MapTileCollisionRenderer;
-import com.b3dgs.lionengine.game.feature.tile.map.collision.MapTileCollisionRendererModel;
-import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersister;
-import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersisterModel;
-import com.b3dgs.lionengine.game.feature.tile.map.viewer.MapTileViewer;
-import com.b3dgs.lionengine.game.feature.tile.map.viewer.MapTileViewerModel;
 import com.b3dgs.lionengine.graphic.ColorRgba;
 import com.b3dgs.lionengine.graphic.Graphic;
+import com.b3dgs.lionengine.helper.WorldHelper;
 import com.b3dgs.lionengine.io.FileReading;
-import com.b3dgs.lionengine.io.FileWriting;
-import com.b3dgs.lionengine.io.InputDeviceDirectional;
 
 /**
  * World implementation.
  */
-class World extends WorldGame
+class World extends WorldHelper
 {
-    static final String FOLDER_MAP = "map";
-    private static final Media MARIO = Medias.create("entity", "Mario.xml");
     private static final ColorRgba BACKGROUND_COLOR = new ColorRgba(107, 136, 255);
-
-    private final MapTile map = services.create(MapTileGame.class);
-    private final MapTilePersister mapPersister = map.addFeatureAndGet(new MapTilePersisterModel(services));
-    private final MapTileGroup mapGroup = map.addFeatureAndGet(new MapTileGroupModel());
-    private final MapTileCollision mapCollision = map.addFeatureAndGet(new MapTileCollisionModel(services));
 
     /**
      * Create world.
@@ -66,9 +42,6 @@ class World extends WorldGame
     {
         super(services);
 
-        services.add(getInputDevice(InputDeviceDirectional.class));
-
-        map.addFeature(new MapTileViewerModel(services));
         camera.setIntervals(16, 0);
     }
 
@@ -81,35 +54,12 @@ class World extends WorldGame
     }
 
     @Override
-    protected void saving(FileWriting file) throws IOException
-    {
-        mapPersister.save(file);
-    }
-
-    @Override
     protected void loading(FileReading file) throws IOException
     {
-        handler.add(map);
+        super.loading(file);
 
-        mapPersister.load(file);
-        mapGroup.loadGroups(Medias.create(FOLDER_MAP, "groups.xml"));
-        mapCollision.loadCollisions(Medias.create(FOLDER_MAP, "formulas.xml"),
-                                    Medias.create(FOLDER_MAP, "collisions.xml"));
-
-        final MapTileCollisionRenderer mapCollisionRenderer;
-        mapCollisionRenderer = map.addFeatureAndGet(new MapTileCollisionRendererModel(services));
-        mapCollisionRenderer.createCollisionDraw();
-
-        final MapTileViewer mapViewer = map.getFeature(MapTileViewer.class);
-        mapViewer.addRenderer(new MapTileRendererModel());
-        mapViewer.addRenderer(mapCollisionRenderer);
-
-        final Featurable mario = factory.create(MARIO);
+        final Featurable mario = factory.create(Medias.create("entity", "Mario.xml"));
         handler.add(mario);
-
-        final CameraTracker tracker = new CameraTracker(services);
-        camera.setLimits(map);
         tracker.track(mario);
-        handler.add(tracker);
     }
 }

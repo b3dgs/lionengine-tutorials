@@ -16,26 +16,14 @@
  */
 package com.b3dgs.lionengine.tutorials.mario.b;
 
-import java.io.IOException;
-
 import com.b3dgs.lionengine.game.feature.Services;
-import com.b3dgs.lionengine.game.feature.WorldGame;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTile;
-import com.b3dgs.lionengine.game.feature.tile.map.MapTileGame;
-import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersister;
-import com.b3dgs.lionengine.game.feature.tile.map.persister.MapTilePersisterModel;
-import com.b3dgs.lionengine.game.feature.tile.map.viewer.MapTileViewerModel;
-import com.b3dgs.lionengine.io.FileReading;
-import com.b3dgs.lionengine.io.FileWriting;
+import com.b3dgs.lionengine.helper.WorldHelper;
 
 /**
  * World implementation.
  */
-class World extends WorldGame
+class World extends WorldHelper
 {
-    private final MapTile map = services.create(MapTileGame.class);
-    private final MapTilePersister mapPersister = map.addFeatureAndGet(new MapTilePersisterModel(services));
-
     /**
      * Create world.
      * 
@@ -44,21 +32,5 @@ class World extends WorldGame
     World(Services services)
     {
         super(services);
-
-        map.addFeature(new MapTileViewerModel(services));
-        handler.add(map);
-    }
-
-    @Override
-    protected void saving(FileWriting file) throws IOException
-    {
-        mapPersister.save(file);
-    }
-
-    @Override
-    protected void loading(FileReading file) throws IOException
-    {
-        mapPersister.load(file);
-        camera.setLimits(map);
     }
 }
