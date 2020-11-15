@@ -44,7 +44,7 @@ class StateIdle extends StateHelper<EntityModel>
                       () -> !isCollideX()
                             && isGoHorizontal()
                             && !UtilMath.isBetween(movement.getDirectionHorizontal(), -0.1, 0.1));
-        addTransition(StateJump.class, () -> isGoUpOnce());
+        addTransition(StateJump.class, this::isGoUpOnce);
         addTransition(StateDie.class, () -> model.getLife().isEmpty());
     }
 
