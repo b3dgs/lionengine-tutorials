@@ -30,7 +30,7 @@ import com.b3dgs.lionengine.helper.MapTileHelper;
 /**
  * Game loop designed to handle our world.
  */
-class Scene extends SequenceGame
+class Scene extends SequenceGame<World>
 {
     /** Native resolution. */
     public static final Resolution NATIVE = new Resolution(320, 240, 60);
